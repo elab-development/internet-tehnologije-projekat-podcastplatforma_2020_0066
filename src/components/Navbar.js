@@ -25,10 +25,6 @@ function Navbar() {
     return () => window.removeEventListener("resize", showButton);
   }, []);
 
-  /*useEffect(() => {
-    showButton();
-  }, []);*/
-
   return (
     <nav className="navbar">
       <div className="navbar-container">

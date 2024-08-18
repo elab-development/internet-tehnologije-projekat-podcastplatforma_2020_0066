@@ -13,6 +13,7 @@ function HeroSection() {
           className="btns"
           buttonStyle="btn--outline"
           buttonSize="btn--large"
+          to="/sign-up"
         >
           GET STARTED
         </Button>
@@ -21,6 +22,7 @@ function HeroSection() {
           buttonStyle="btn--primary"
           buttonSize="btn--large"
           onClick={console.log("hey")}
+          to="/explore"
         >
           EXPLORE
           <i className="far fa-play-circle" />
