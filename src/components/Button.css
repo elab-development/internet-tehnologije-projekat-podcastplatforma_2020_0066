@@ -9,6 +9,7 @@
     outline: none;
     border: none;
     cursor: pointer;
+    
 }
 
 .btn--primary{
@@ -42,6 +43,6 @@
 }
 
 .sign-up-btn {
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'PT Sans', sans-serif;
     font-size: 18px; 
 }

@@ -11,7 +11,7 @@ function Navbar() {
   const closeMobileMenu = () => setClick(false);
 
   const showButton = () => {
-    if (window.innerWidth <= 950) {
+    if (window.innerWidth <= 960) {
       setButton(false);
     } else {
       setButton(true);
@@ -19,17 +19,20 @@ function Navbar() {
   };
 
   useEffect(() => {
-    showButton(); // Initial check when component mounts
+    showButton();
     window.addEventListener("resize", showButton);
 
-    // Cleanup the event listener when the component unmounts
     return () => window.removeEventListener("resize", showButton);
   }, []);
+
+  /*useEffect(() => {
+    showButton();
+  }, []);*/
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
+        <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
           Podcast Platform <i className="fab fa-typo3" />
         </Link>
         <div className="menu-icon" onClick={handleClick}>
@@ -37,7 +40,7 @@ function Navbar() {
         </div>
         <ul className={click ? "nav-menu active" : "nav-menu"}>
           <li className="nav-item">
-            <Link to="" className="nav-links" onClick={closeMobileMenu}>
+            <Link to="/" className="nav-links" onClick={closeMobileMenu}>
               Home
             </Link>
           </li>
@@ -48,7 +51,7 @@ function Navbar() {
           </li>
           <li className="nav-item">
             <Link to="/fav" className="nav-links" onClick={closeMobileMenu}>
-              Favorites
+              Favourites
             </Link>
           </li>
           <li className="nav-item">

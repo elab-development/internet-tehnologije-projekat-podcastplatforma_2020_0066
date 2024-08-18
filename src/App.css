@@ -1,43 +1,44 @@
-
-/*body {
-  font-family: Arial, sans-serif;
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'PT Sans', sans-serif;
 }
 
-nav ul {
-  list-style-type: none;
+.home,
+.fav,
+.explore,
+.sign-up {
   display: flex;
-  justify-content: space-around;
-  background-color: #333;
-  padding: 10px 0;
+  height: 90vh;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
 }
 
-nav ul li a {
-  color: white;
-  text-decoration: none;
+.explore {
+  /*background-image: url('/images/img-2.jpg');*/
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
 }
 
-nav ul li a:hover {
-  text-decoration: underline;
+.fav {
+ /* background-image: url('/images/img-1.jpg');*/
+  background-position: center;
+  background-size: fill;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
 }
 
-.podcast-card {
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin: 10px;
-  border-radius: 5px;
+.sign-up {
+ /* background-image: url('/images/img-8.jpg');*/
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-size: 100px;
 }
-
-.input-field {
-  margin: 10px 0;
-}
-
-input {
-  padding: 8px;
-  width: 100%;
-  margin-top: 5px;
-  box-sizing: border-box;
-}
-
-*/
