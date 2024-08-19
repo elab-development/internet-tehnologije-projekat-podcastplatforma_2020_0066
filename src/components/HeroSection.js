@@ -14,6 +14,7 @@ function HeroSection() {
           buttonStyle="btn--outline"
           buttonSize="btn--large"
           to="/sign-up"
+          onClick={() => alert("Button Clicked!")}
         >
           GET STARTED
         </Button>

@@ -1,6 +1,13 @@
 import React from "react";
 import "../App.css";
+import Footer from "../components/Footer";
+import PodcastsE from "../components/PodcastsE";
 
 export default function Explore() {
-  return <h1 className="explore">EXPLORE</h1>;
+  return (
+    <>
+      <PodcastsE />
+      <Footer />
+    </>
+  );
 }
