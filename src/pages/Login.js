@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "../App.css";
+import LoginSignup from "../components/LoginSignup.jsx";
 
-export default function Login() {
-  return <h1 className="login">LIKE & SUBSCRIBE</h1>;
+function Login() {
+  return (
+    <div>
+      <LoginSignup />
+    </div>
+  );
 }
+
+export default Login;
