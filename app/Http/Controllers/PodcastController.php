@@ -19,7 +19,14 @@ class PodcastController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $podcast = Podcast::create($validated);
+        return response()->json($podcast, 201);
     }
 
     /**
@@ -27,7 +34,8 @@ class PodcastController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $podcast = Podcast::with('episodes')->findOrFail($id);
+        return response()->json($podcast);
     }
 
     /**
@@ -35,7 +43,15 @@ class PodcastController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'user_id' => 'sometimes|required|exists:users,id',
+        ]);
+
+        $podcast = Podcast::findOrFail($id);
+        $podcast->update($validated);
+        return response()->json($podcast);
     }
 
     /**
@@ -43,6 +59,8 @@ class PodcastController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $podcast = Podcast::findOrFail($id);
+        $podcast->delete();
+        return response()->json(null, 204);
     }
 }
