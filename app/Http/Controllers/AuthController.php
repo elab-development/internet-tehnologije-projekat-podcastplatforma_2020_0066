@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.login');
+        return  response()->json(['message' => 'Login form']);;
     }
 
     public function login(Request $request)
@@ -19,41 +19,43 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('/');
+            return response()->json(['message' => 'Login successful']);
         }
 
-        return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        return response()->json(['error' => 'Invalid credentials'], 401);
     }
 
     public function showSignupForm()
     {
-        return view('auth.signup');
+        return response()->json(['message' => 'Signup form']);
     }
 
     public function signup(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|max:255|unique:users',
+            'name' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'admin' => 'boolean', 
         ]);
 
         $user = new User([
-            'username' => $request->username,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'admin' => $request->has('admin') ? $request->admin : false,
         ]);
 
         $user->save();
 
         Auth::login($user);
 
-        return redirect()->intended('/');
+        return response()->json(['message' => 'Signup successful']);
     }
 
     public function logout()
     {
         Auth::logout();
-        return redirect('/');
+        return response()->json(['message' => 'Logged out']);
     }
 }
