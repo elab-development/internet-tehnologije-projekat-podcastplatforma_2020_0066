@@ -19,6 +19,8 @@ class PodcastController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Podcast::class);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -43,6 +45,9 @@ class PodcastController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+        $this->authorize('create', Podcast::class);
+
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
@@ -59,6 +64,9 @@ class PodcastController extends Controller
      */
     public function destroy(string $id)
     {
+
+        $this->authorize('create', Podcast::class);
+
         $podcast = Podcast::findOrFail($id);
         $podcast->delete();
         return response()->json(null, 204);
