@@ -19,7 +19,17 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Login successful']);
+            
+            $user = Auth::user();
+            $user->tokens()->delete();
+            $token = $user->createToken('podcastplatform')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'Login successful',
+                'token' => $token,
+                'user' => $user,
+            ]);
+        
         }
 
         return response()->json(['error' => 'Invalid credentials'], 401);
@@ -53,8 +63,9 @@ class AuthController extends Controller
         return response()->json(['message' => 'Signup successful']);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
+        $request->user()->currentAccessToken()->delete();
         Auth::logout();
         return response()->json(['message' => 'Logged out']);
     }

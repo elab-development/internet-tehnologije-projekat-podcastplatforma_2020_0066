@@ -23,10 +23,14 @@ class EpisodeController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'audio_url' => 'required|string',
+            'audio_file' => 'required|file|mimes:mp3,wav,aac|max:20480',
         ]);
 
+        $audioFile = $request->file('audio_file');
+        $filePath = $audioFile->store('audio_files', 'public');
+
         $validated['podcast_id'] = $podcastId;
+        $validated['audio_file'] = $filePath;
 
         $episode = Episode::create($validated);
         return response()->json($episode, 201);
@@ -49,10 +53,23 @@ class EpisodeController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
-            'audio_url' => 'sometimes|required|string',
+            'audio_file' => 'sometimes|file|mimes:mp3,wav,aac|max:20480', 
         ]);
 
         $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
+        
+        if ($request->hasFile('audio_file')) {
+            
+            if ($episode->audio_file) {
+                Storage::disk('public')->delete($episode->audio_file);
+            }
+
+            $audioFile = $request->file('audio_file');
+            $filePath = $audioFile->store('audio_files', 'public');
+            $validated['audio_file'] = $filePath;
+        }
+
+        
         $episode->update($validated);
         return response()->json($episode);
     }
@@ -63,6 +80,11 @@ class EpisodeController extends Controller
     public function destroy(string $id,string $podcastId)
     {
         $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
+        
+        if ($episode->audio_file) {
+            Storage::disk('public')->delete($episode->audio_file);
+        }
+
         $episode->delete();
         return response()->json(null, 204);
     }

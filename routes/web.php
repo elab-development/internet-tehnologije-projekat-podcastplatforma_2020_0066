@@ -10,6 +10,7 @@ Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });

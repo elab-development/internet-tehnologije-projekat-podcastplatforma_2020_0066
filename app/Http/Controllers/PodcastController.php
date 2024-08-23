@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Podcast;
+
 
 class PodcastController extends Controller
 {
@@ -19,7 +21,7 @@ class PodcastController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Podcast::class);
+       // $this->authorize('create', Podcast::class);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -27,7 +29,13 @@ class PodcastController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $podcast = Podcast::create($validated);
+        //$podcast = Podcast::create($validated);
+
+        $podcast = Podcast::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'user_id' => $validated['user_id'],
+        ]);
         return response()->json($podcast, 201);
     }
 
@@ -46,7 +54,7 @@ class PodcastController extends Controller
     public function update(Request $request, string $id)
     {
 
-        $this->authorize('create', Podcast::class);
+       // $this->authorize('update', Podcast::class);
 
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
@@ -65,7 +73,7 @@ class PodcastController extends Controller
     public function destroy(string $id)
     {
 
-        $this->authorize('create', Podcast::class);
+       // $this->authorize('delete', Podcast::class);
 
         $podcast = Podcast::findOrFail($id);
         $podcast->delete();
