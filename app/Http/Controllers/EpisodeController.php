@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Episode;
+use Illuminate\Support\Facades\Storage;
+
 
 class EpisodeController extends Controller
 {
@@ -23,7 +26,7 @@ class EpisodeController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'audio_file' => 'required|file|mimes:mp3,wav,aac|max:20480',
+            'audio_file' => 'required|file|mimes:mp3,wav,aac|max:51200',
         ]);
 
         $audioFile = $request->file('audio_file');
