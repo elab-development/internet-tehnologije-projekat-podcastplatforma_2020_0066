@@ -54,8 +54,6 @@ class PodcastController extends Controller
     public function update(Request $request, string $id)
     {
 
-       // $this->authorize('update', Podcast::class);
-
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',

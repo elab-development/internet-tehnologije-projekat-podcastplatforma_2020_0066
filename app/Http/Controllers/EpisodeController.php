@@ -45,6 +45,7 @@ class EpisodeController extends Controller
     public function show(string $id, string $podcastId)
     {
         $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
+        $episode->audio_file = Storage::url($episode->audio_file);
         return response()->json($episode);
     }
 
