@@ -4,8 +4,9 @@ import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
-import MyPage from "./pages/Fav";
+import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
+import AddPod from "./pages/Add";
 import { AuthProvider, useAuth } from "./components/AuthContext";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/explore" exact element={<Explore />} />
           <Route path="/mypage" exact element={<MyPage />} />
           <Route path="/sign-up" exact element={<Login />} />
+          <Route path="/addpod" exact element={<AddPod />} />
         </Routes>
       </Router>
     </AuthProvider>
