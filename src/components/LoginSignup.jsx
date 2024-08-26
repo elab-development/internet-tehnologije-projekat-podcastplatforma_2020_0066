@@ -77,7 +77,7 @@ function LoginSignup() {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="inputs">
-          {action === "Login" && (
+          {action !== "Login" && (
             <>
               <div className="input">
                 <i className="fas fa-user" />
