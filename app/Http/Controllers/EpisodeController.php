@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Episode;
+use App\Models\Podcast;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Auth;
 
 class EpisodeController extends Controller
 {
@@ -29,6 +30,18 @@ class EpisodeController extends Controller
             'audio_file' => 'required|file|mimes:mp3,wav,aac|max:51200',
         ]);
 
+
+
+        $podcast = Podcast::findOrFail($podcastId);
+
+
+
+        if (Auth::id() !== $podcast->user_id && !Auth::user()->admin) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+   
+
         $audioFile = $request->file('audio_file');
         $filePath = $audioFile->store('audio_files', 'public');
 
@@ -42,7 +55,7 @@ class EpisodeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, string $podcastId)
+    public function show(string $podcastId, string $id)
     {
         $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
         $episode->audio_file = Storage::url($episode->audio_file);
@@ -52,7 +65,7 @@ class EpisodeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id, string $podcastId)
+    public function update(Request $request, string $podcastId, string $id)
     {
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
@@ -61,7 +74,13 @@ class EpisodeController extends Controller
         ]);
 
         $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
-        
+        $podcast = Podcast::findOrFail($podcastId);
+
+        if (Auth::id() !== $podcast->user_id && !Auth::user()->admin) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+
         if ($request->hasFile('audio_file')) {
             
             if ($episode->audio_file) {
@@ -81,10 +100,15 @@ class EpisodeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id,string $podcastId)
+    public function destroy(string $podcastId,string $id)
     {
         $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
-        
+        $podcast = Podcast::findOrFail($podcastId);
+
+        if (Auth::id() !== $podcast->user_id && !Auth::user()->admin) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         if ($episode->audio_file) {
             Storage::disk('public')->delete($episode->audio_file);
         }

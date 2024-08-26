@@ -35,7 +35,7 @@ class PodcastController extends Controller
             //'user_id' => $validated['user_id'],
             'user_id' => Auth::id(), 
         ]);
-        
+
         return response()->json($podcast, 201);
     }
 
@@ -44,6 +44,7 @@ class PodcastController extends Controller
      */
     public function show(string $id)
     {
+        
         $podcast = Podcast::with('episodes')->findOrFail($id);
         return response()->json($podcast);
     }
