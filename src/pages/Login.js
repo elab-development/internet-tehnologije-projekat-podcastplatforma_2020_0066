@@ -1,6 +1,14 @@
 import React from "react";
 import "../App.css";
+import LoginSignup from "../components/LoginSignup.jsx";
+import Footer from "../components/Footer.js";
 
-export default function Login() {
-  return <h1 className="login">LIKE & SUBSCRIBE</h1>;
+function Login() {
+  return (
+    <div>
+      <LoginSignup />
+      <Footer />
+    </div>
+  );
 }
+export default Login;
