@@ -1,9 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import "./Footer.css";
+import { useAuth } from "./AuthContext";
 
 function Footer() {
+  const { isAuthenticated, logout, setCurrentUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    if (isAuthenticated) {
+      logout();
+      setCurrentUser(null);
+      navigate("/sign-up");
+    } else {
+      navigate("/sign-up");
+    }
+  };
+
   return (
     <div className="footer-container">
       <section className="footer-subscription">
@@ -11,7 +25,13 @@ function Footer() {
           Make your own account to receive notifications from our best podcasts
         </p>
         <div className="input-areas">
-          <Button buttonStyle="btn--outline">Sign up</Button>
+          <Button
+            buttonStyle="btn--outline"
+            onClick={handleButtonClick}
+            isLink={false}
+          >
+            {isAuthenticated ? "Log out" : "Sign up"}
+          </Button>
         </div>
       </section>
 

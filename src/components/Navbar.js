@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { Button } from "./Button.js";
+import { useAuth } from "./AuthContext";
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
+  const navigate = useNavigate();
+  const { isAuthenticated, logout, setCurrentUser } = useAuth();
 
   const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
+  const closeMobileMenu = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setClick(false);
+  };
 
   const showButton = () => {
     if (window.innerWidth <= 960) {
@@ -24,6 +30,11 @@ function Navbar() {
 
     return () => window.removeEventListener("resize", showButton);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/sign-up");
+  };
 
   return (
     <nav className="navbar">
@@ -46,10 +57,11 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/fav" className="nav-links" onClick={closeMobileMenu}>
-              Favourites
+            <Link to="/mypage" className="nav-links" onClick={closeMobileMenu}>
+              My Page
             </Link>
           </li>
+
           <li className="nav-item">
             <Link
               to="/sign-up"
@@ -60,7 +72,18 @@ function Navbar() {
             </Link>
           </li>
         </ul>
-        {button && <Button buttonStyle="btn--outline">SIGN UP</Button>}
+        {button &&
+          (!isAuthenticated ? (
+            <Button buttonStyle="btn--outline" to="/sign-up">
+              SIGN UP
+            </Button>
+          ) : (
+            <>
+              <Button buttonStyle="btn--outline" onClick={handleLogout}>
+                LOG OUT
+              </Button>
+            </>
+          ))}
       </div>
     </nav>
   );
