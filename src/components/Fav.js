@@ -7,17 +7,17 @@ import pod2 from "./images/pod2.avif";
 import pod3 from "./images/pod3.jpg";
 import pod4 from "./images/pod4.png";
 import pod5 from "./images/pod5.jpeg";
-import useAuth from "./AuthContext";
+import { useAuth } from "./AuthContext";
 
 function Podcasts() {
-  const { currentUser } = useAuth(); // Corrected destructuring and function syntax
+  const { currentUser } = useAuth();
   return (
     <div className="pod">
       <h1>Favourites</h1>
       <div className="pod_container">
         <ul className="pod_items">
           <PodItem
-            src={pod1} // Changed to curly braces for dynamic content
+            src={pod1}
             text="Stuff You Should Know is a great podcast for avid learners, offering a basic introduction into a range of fascinating topics."
             label="Informational"
             path="/podcast"
@@ -50,7 +50,7 @@ function Podcasts() {
           />
         </ul>
 
-        {currentUser?.isAdmin && ( // Conditional rendering for admin
+        {currentUser?.isAdmin && (
           <>
             <h1>My Podcasts</h1>
             <ul className="pod_items">
