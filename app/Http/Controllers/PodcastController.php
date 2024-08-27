@@ -21,7 +21,11 @@ class PodcastController extends Controller
      */
     public function store(Request $request)
     {
-       
+       //provera jel admin
+        if (!Auth::user()->admin) {
+            return response()->json(['error' => 'Unauthorized. Only admins can create podcasts.'], 403);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
