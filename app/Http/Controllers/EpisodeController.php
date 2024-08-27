@@ -31,22 +31,18 @@ class EpisodeController extends Controller
         ]);
 
 
-
         $podcast = Podcast::findOrFail($podcastId);
-
-
 
         if (Auth::id() !== $podcast->user_id && !Auth::user()->admin) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         
-   
-
         $audioFile = $request->file('audio_file');
         $filePath = $audioFile->store('audio_files', 'public');
+      //  $audioUrl = Storage::url($filePath);
 
         $validated['podcast_id'] = $podcastId;
-        $validated['audio_file'] = $filePath;
+        $validated['audio_file'] =  $filePath ;
 
         $episode = Episode::create($validated);
         return response()->json($episode, 201);
