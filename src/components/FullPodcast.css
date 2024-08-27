@@ -10,7 +10,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  /* Podcast details styling */
   .podcast-details {
     margin-top: 20px;
   }
@@ -36,7 +35,7 @@
     line-height: 1.6;
   }
   
-  /* Episodes list styling */
+
   .episodes-list {
     text-align: left;
     margin-top: 30px;
@@ -67,7 +66,7 @@
     margin: 0;
   }
   
-  /* Audio controls styling */
+/*
   .audio-controls {
     margin-top: 10px;
     display: flex;
@@ -88,7 +87,7 @@
   
   .audio-controls button:hover {
     background-color: #0056b3;
-  }
+  }*/
   
   @media (max-width: 600px) {
     .podcast-page {

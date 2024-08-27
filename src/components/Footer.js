@@ -11,10 +11,10 @@ function Footer() {
   const handleButtonClick = () => {
     if (isAuthenticated) {
       logout();
-      navigate("/sign-up");
-    } else {
-      navigate("/sign-up");
-    }
+      //navigate("/sign-up");
+    } //else {
+    // navigate("/sign-up");
+    // }
   };
 
   return (
@@ -27,7 +27,7 @@ function Footer() {
           <Button
             buttonStyle="btn--outline"
             onClick={handleButtonClick}
-            isLink={false}
+            to="/sign-up"
           >
             {isAuthenticated ? "Log out" : "Sign up"}
           </Button>

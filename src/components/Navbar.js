@@ -33,7 +33,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
-    navigate("/sign-up");
+    //navigate("/sign-up");
   };
 
   return (
@@ -79,7 +79,11 @@ function Navbar() {
             </Button>
           ) : (
             <>
-              <Button buttonStyle="btn--outline" onClick={handleLogout}>
+              <Button
+                buttonStyle="btn--outline"
+                onClick={handleLogout}
+                to="/sign-up"
+              >
                 LOG OUT
               </Button>
             </>

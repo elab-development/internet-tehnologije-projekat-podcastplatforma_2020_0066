@@ -23,6 +23,7 @@ function LoginSignup() {
       const loggedInUser = users.find(
         (user) => user.email === email && user.password === password
       );
+
       if (loggedInUser) {
         alert("Login successful!");
         console.log("Logged in user:", loggedInUser);
