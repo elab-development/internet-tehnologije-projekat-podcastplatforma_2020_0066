@@ -23,11 +23,16 @@ export const Button = ({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleClick = (e) => {
+    onClick && onClick(e);
+    onClick1();
+  };
+
   return (
     <Link to={to} className="btn-mobile">
       <button
         className={"btn ${checkButtonStyle} ${checkButtonSize}  sign-up-btn"}
-        onClick={onClick}
+        onClick={handleClick}
         type={type}
       >
         {children}

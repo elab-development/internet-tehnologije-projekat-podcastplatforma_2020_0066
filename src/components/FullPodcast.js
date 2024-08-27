@@ -67,9 +67,11 @@ function AudioPlayer({ audioUrl }) {
   const { currentUser } = useAuth();
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
     const updateProgress = () => {
       if (audio.duration && !isNaN(audio.duration)) {
         setCurrentTime(audio.currentTime);
@@ -81,18 +83,22 @@ function AudioPlayer({ audioUrl }) {
         }
       }
     };
+
     const setAudioData = () => {
       if (!isNaN(audio.duration)) {
         setDuration(audio.duration);
       }
     };
+
     audio.addEventListener("timeupdate", updateProgress);
     audio.addEventListener("loadedmetadata", setAudioData);
+
     return () => {
       audio.removeEventListener("timeupdate", updateProgress);
       audio.removeEventListener("loadedmetadata", setAudioData);
     };
   }, []);
+
   return (
     <div className="audio-player">
       <audio ref={audioRef} src={audioUrl} controls></audio>
