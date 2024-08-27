@@ -24,3 +24,6 @@ Route::get('/podcasts/{podcastId}/episodes/{id}', [EpisodeController::class, 'sh
 Route::put('/podcasts/{podcastId}/episodes/{id}', [EpisodeController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('/podcasts/{podcastId}/episodes/{id}', [EpisodeController::class, 'destroy'])->middleware('auth:sanctum');
 
+Route::post('/podcasts/{id}/favorite', [PodcastController::class, 'favorite'])->middleware('auth:sanctum');
+Route::delete('/podcasts/{id}/favorite', [PodcastController::class, 'unfavorite'])->middleware('auth:sanctum');
+Route::get('/user/favorites', [PodcastController::class, 'favorites'])->middleware('auth:sanctum');
