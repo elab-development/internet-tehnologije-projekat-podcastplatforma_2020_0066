@@ -1,0 +1,146 @@
+
+.container{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 50px;
+    background-color: #fff;
+    padding-bottom: 30px;
+    align-items: center;
+    width: 600px;
+}
+
+.header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.text{
+    color: #3c009d;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.underline{
+    width: text;
+    height: 6px;
+    background-color: #3c009d;
+    border-radius: 9px;
+}
+
+.inputs{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.input, .checkbox-input {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    width: 480px;
+    height: 60px;
+    background-color: #eaeaea;
+    border-radius: 6px;
+}
+
+.input i{
+    margin: 0px 30px;
+    color: #797979;
+}
+
+.input input{
+    height: 50px;
+    width: 400px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #797979;
+    font-size: 19px;
+}
+
+.input i, .checkbox-input input {
+    margin: 0 10px; 
+}
+
+.checkbox-input {
+    width: 480px; 
+    height: auto;
+}
+
+.checkbox-input input[type="checkbox"] {
+    margin: 0; 
+}
+
+
+.checkbox-input label {
+    color: #797979;
+    font-size: 19px;
+    margin-left: 10px; 
+}
+
+.forgot-password{
+margin-top: 27px;
+color: #797979;
+font-size: 18px;
+justify-content: center;
+padding-bottom: 30px;
+
+}
+
+.forgot-password span{
+    color: #4c00b4;
+    cursor: pointer;
+}
+
+.submit-container{
+    display: flex;
+    gap: 30px;
+    margin: 60px auto;
+}
+
+
+.submit-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 59px;
+    color: #fff;
+    background: #8e1d5f;
+    border-radius: 50px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 30px auto 0; 
+}
+
+.submit{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 59px;
+    color: #fff;
+    background: #4c00b4;
+    border-radius: 50px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.gray{
+    background-color: #eaeaea;
+    color: #676767;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
