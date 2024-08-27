@@ -5,13 +5,12 @@ import "./Footer.css";
 import { useAuth } from "./AuthContext";
 
 function Footer() {
-  const { isAuthenticated, logout, setCurrentUser } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
     if (isAuthenticated) {
       logout();
-      setCurrentUser(null);
       navigate("/sign-up");
     } else {
       navigate("/sign-up");

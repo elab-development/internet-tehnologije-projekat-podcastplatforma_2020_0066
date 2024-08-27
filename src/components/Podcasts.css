@@ -50,6 +50,14 @@
     padding-top: 67%;
     overflow: hidden;
   }
+
+  .pod__items {
+    display: flex;
+    flex-wrap: wrap; /* Ensure items wrap to the next line */
+    justify-content: space-between; /* Distribute items evenly */
+    margin-bottom: 24px;
+    gap: 16px; /* Optional: adds space between items */
+  }
   
   .fade-img {
     animation-name: fade-img;
