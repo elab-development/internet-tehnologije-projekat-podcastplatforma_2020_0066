@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./LoginSignup.css";
 import { useNavigate } from "react-router-dom";
-import axios from "./services/axios"; 
+import axios from "./services/axios";
 
 function LoginSignup() {
   const [action, setAction] = useState("Login");
@@ -16,9 +16,17 @@ function LoginSignup() {
     e.preventDefault();
     setError("");
 
+    console.log("Action:", action);
+    console.log("Email:", email);
+    console.log("Username:", username);
+    console.log("Password:", password);
+    console.log("Is Admin:", isAdmin);
+
     try {
       if (action === "Login") {
+        console.log("Sending login request...");
         const response = await axios.post("/login", { email, password });
+        console.log("Login response:", response.data);
         localStorage.setItem("token", response.data.token);
         navigate("/mypage");
       } else {

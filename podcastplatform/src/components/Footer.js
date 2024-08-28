@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import "./Footer.css";
-import axios from "./services/axios"; 
+import axios from "./services/axios";
 
 function Footer() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -11,9 +11,10 @@ function Footer() {
   const handleButtonClick = async () => {
     if (isAuthenticated) {
       try {
+        console.log("Token:", localStorage.getItem("token"));
         await axios.post("/logout");
-        localStorage.removeItem("token"); 
-        
+        console.log("Logout response:");
+        localStorage.removeItem("token");
       } catch (error) {
         console.error("Error logging out:", error);
       }
