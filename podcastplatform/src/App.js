@@ -42,8 +42,14 @@ function App() {
 }
 
 const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/sign-up" />;
+};
+
+/*
+const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/sign-up" />;
-};
+};*/
 
 export default App;

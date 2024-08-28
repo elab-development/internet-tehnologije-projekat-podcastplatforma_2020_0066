@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./LoginSignup.css";
-import { useAuth } from "./AuthContext";
+//import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import axios from "../axios"; 
 
 function LoginSignup() {
   const [action, setAction] = useState("Login");
@@ -10,13 +11,42 @@ function LoginSignup() {
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState("");
-  const { login, setCurrentUser, currentUser } = useAuth();
+  //const { login, setCurrentUser, currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+    try {
+      if (action === "Login") {
+        const response = await axios.post("/login", { email, password });
+        localStorage.setItem("token", response.data.token);
+        // Optionally store user details
+        navigate("/mypage");
+      } else {
+        if (username === "" || email === "" || password === "") {
+          setError("All fields are required for sign-up");
+        } else {
+        const response = await axios.post("/signup", {
+          name: username,
+          email,
+          password,
+          admin: isAdmin,
+        });
+
+        alert("Sign up successful!");
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setIsAdmin(false);
+        navigate("/mypage");
+      }
+    }
+    } catch (error) {
+       setError(error.response?.data?.error || "An error occurred");
+    }
+/*
     if (action === "Login") {
       const users = JSON.parse(localStorage.getItem("users")) || [];
       console.log("Users from localStorage:", users);
@@ -60,7 +90,7 @@ function LoginSignup() {
         navigate("/mypage");
       }
     }
-  };
+  };*/
   const handleActionChange = (newAction) => {
     setError("");
     setAction(newAction);
