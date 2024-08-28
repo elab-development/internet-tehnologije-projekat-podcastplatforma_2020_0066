@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./Fav.css";
 import PodItem from "./PodItem.js";
 import { Button } from "./Button.js";
@@ -7,73 +7,67 @@ import pod2 from "./images/pod2.avif";
 import pod3 from "./images/pod3.jpg";
 import pod4 from "./images/pod4.png";
 import pod5 from "./images/pod5.jpeg";
-import axios from "./services/axios"; 
+import axios from "./services/axios";
 
 function Podcasts() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
         if (token) {
-          const response = await axios.get("/user", {
+          const userResponse = await axios.get("/user", {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setCurrentUser(response.data);
+          setCurrentUser(userResponse.data);
+
+          const favResponse = await axios.get("/user/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setFavorites(favResponse.data);
         }
       } catch (error) {
         console.error("Failed to fetch user data", error);
         setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
-  
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div className="pod">
       <h1>Favourites</h1>
-      <div className="pod_container">
-        <ul className="pod_items">
-          <PodItem
-            src={pod1}
-            text="Stuff You Should Know is a great podcast for avid learners, offering a basic introduction into a range of fascinating topics."
-            label="Informational"
-            path="/podcast"
-          />
-          <PodItem
-            src={pod2}
-            text="Huberman Lab discusses neuroscience - how our brain and its connections with the organs of our body control our perceptions, our behaviors, and our health."
-            label="Health"
-            path="/podcast"
-          />
-          <PodItem
-            src={pod3}
-            text="Dax Shepard interviews celebrities and experts, exploring human behavior and personal stories."
-            label="Interview"
-            path="/podcast"
-          />
-          <PodItem
-            src={pod4}
-            text="Daily episodes featuring insightful talks on various topics from the renowned TED stage."
-            label="Education"
-            path="/podcast"
-          />
-        </ul>
-        <ul className="pod_items">
-          <PodItem
-            src={pod3}
-            text="A daily news podcast by The New York Times, offering in-depth analysis of current events."
-            label="News"
-            path="/podcast"
-          />
-        </ul>
+      <div className="pod__container">
+        {favorites.length > 0 ? (
+          <ul className="pod__items">
+            {favorites.map((podcast) => (
+              <PodItem
+                key={podcast.id}
+                src={podcast.image}
+                text={podcast.description}
+                label={podcast.category}
+                path={`/podcast`}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p>No favorite podcasts yet.</p>
+        )}
 
         {currentUser?.admin && (
           <>
             <h1>My Podcasts</h1>
-            <ul className="pod_items">
+            <ul className="pod__items">
               <PodItem
                 src={pod3}
                 text="A daily news podcast by The New York Times, offering in-depth analysis of current events."

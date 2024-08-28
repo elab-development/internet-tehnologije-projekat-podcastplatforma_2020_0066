@@ -26,8 +26,8 @@ function Podcasts() {
   return (
     <div className="pod">
       <h1>A wide variety of podcasts!</h1>
-      <div className="pod_container">
-        <ul className="pod_items">
+      <div className="pod__container">
+        <ul className="pod__items">
           {podcasts.map((podcast) => (
             <PodItem
               key={podcast.id}

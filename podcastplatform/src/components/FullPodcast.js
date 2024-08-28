@@ -4,7 +4,7 @@ import pod5 from "./images/pod5.jpeg";
 import episode1Audio from "./audio/episode1.mp3";
 import episode2Audio from "./audio/episode2.mp3";
 import episode3Audio from "./audio/episode3.mp3";
-import axios from "./services/axios"; 
+import axios from "./services/axios";
 
 const podcastData = {
   id: 1,
@@ -35,7 +35,6 @@ const podcastData = {
 };
 
 function PodcastPage() {
-
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -74,7 +73,10 @@ function PodcastPage() {
               <li key={episode.id} className="episode-item">
                 <h4>{episode.title}</h4>
                 <p>{episode.description}</p>
-                <AudioPlayer audioUrl={episode.audioUrl} currentUser={currentUser}/>
+                <AudioPlayer
+                  audioUrl={episode.audioUrl}
+                  currentUser={currentUser}
+                />
               </li>
             ))}
           </ul>

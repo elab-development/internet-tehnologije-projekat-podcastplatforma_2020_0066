@@ -160,7 +160,9 @@ public function unfavorite(int $id)
 public function favorites()
 {
     $user = Auth::user();
-    $favorites = Favorite::where('user_id', $user->id)->with('podcast')->get();
+     $favorites = Podcast::whereHas('favorites', function($query) use ($user) {
+        $query->where('user_id', $user->id);
+    })->get();
 
     return response()->json($favorites);
 }

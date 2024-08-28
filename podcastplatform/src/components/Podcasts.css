@@ -222,6 +222,29 @@
     font-size: 18px;
     line-height: 24px;
   }
+  .favorite-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f4a261;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .favorite-btn:hover {
+    background-color: #e76f51;
+    transform: scale(1.05);
+  }
+  
+  .favorite-btn.unfavorite {
+    background-color: #e63946;
+  }
+  
+  .favorite-btn.unfavorite:hover {
+    background-color: #d62839;
+  }
   
   @media only screen and (min-width: 1200px) {
     .content__blog__container {
