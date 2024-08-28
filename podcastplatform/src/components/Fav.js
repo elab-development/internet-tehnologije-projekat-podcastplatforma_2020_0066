@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState,useEffect} from "react";
 import "./Fav.css";
 import PodItem from "./PodItem.js";
 import { Button } from "./Button.js";
@@ -10,7 +10,27 @@ import pod5 from "./images/pod5.jpeg";
 import axios from "./services/axios"; 
 
 function Podcasts() {
-  const { currentUser } = useAuth();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get("/user", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setCurrentUser(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+        setCurrentUser(null);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
   return (
     <div className="pod">
       <h1>Favourites</h1>
@@ -50,7 +70,7 @@ function Podcasts() {
           />
         </ul>
 
-        {currentUser?.isAdmin && (
+        {currentUser?.admin && (
           <>
             <h1>My Podcasts</h1>
             <ul className="pod_items">
