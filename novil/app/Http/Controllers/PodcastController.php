@@ -30,15 +30,26 @@ class PodcastController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            //'user_id' => 'required|exists:users,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
+            
         ]);
 
+       
+
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('images', 'public');
+        }else{
+            $imagePath = null;
+        }
 
         $podcast = Podcast::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             //'user_id' => $validated['user_id'],
             'user_id' => Auth::id(), 
+            'image' => $imagePath,
         ]);
 
         return response()->json($podcast, 201);
@@ -68,10 +79,28 @@ class PodcastController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
-           // 'user_id' => 'sometimes|required|exists:users,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
         ]);
 
-       // $podcast = Podcast::findOrFail($id);
+        $imagePath = $podcast->image; 
+        if ($request->hasFile('image')) {
+            
+            if ($podcast->image) {
+                \Storage::disk('public')->delete($podcast->image);
+            }
+    
+            $image = $request->file('image');
+            $imagePath = $image->store('images', 'public');
+            
+        }
+
+        $validated['image'] = $imagePath;
+
+        return response()->json([
+            'image' => $imagePath
+        ], 500);
+
+    
         $podcast->update($validated);
         return response()->json($podcast);
     }
@@ -91,6 +120,7 @@ class PodcastController extends Controller
         $podcast->delete();
         return response()->json(null, 204);
     }
+
 
     public function favorite(int $id)
 {

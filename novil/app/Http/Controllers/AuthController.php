@@ -65,8 +65,38 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        Auth::logout();
-        return response()->json(['message' => 'Logged out']);
+      
+        try{
+
+                return response()->json([
+                    'status' => 'Entered logout function'
+                ], 200);
+            
+
+            $token = $request->bearerToken();
+            if ($token) {
+                return response()->json([
+                    'token' => $token
+                ], 500);
+                $user = $request->user();
+            
+                return response()->json([
+                    'user' => $user
+                ], 500);
+
+                $user->currentAccessToken()->delete();
+            }
+
+
+            Auth::logout();
+            return response()->json(['message' => 'Logged out']);
+        }catch (\Exception $e) {
+           
+            return response()->json([
+                'error' => 'Logout failed',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+	    
     }
 }
