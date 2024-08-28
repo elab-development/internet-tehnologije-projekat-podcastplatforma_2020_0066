@@ -8,8 +8,7 @@ function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const navigate = useNavigate();
-  const { isAuthenticated, logout, setCurrentUser } = useAuth();
-
+  
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -31,10 +30,16 @@ function Navbar() {
     return () => window.removeEventListener("resize", showButton);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    //navigate("/sign-up");
+  const handleLogout = async () => {
+    try {
+      await axios.post("/logout"); 
+      localStorage.removeItem("token");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
+
+  const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <nav className="navbar">
