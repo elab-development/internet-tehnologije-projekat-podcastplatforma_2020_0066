@@ -31,12 +31,10 @@ class PodcastController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
-            
+            'category' => 'nullable|string|max:255',
         ]);
 
        
-
-        
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = $image->store('images', 'public');
@@ -50,6 +48,7 @@ class PodcastController extends Controller
             //'user_id' => $validated['user_id'],
             'user_id' => Auth::id(), 
             'image' => $imagePath,
+            'category' => $validated['category'],
         ]);
 
         return response()->json($podcast, 201);
@@ -80,6 +79,7 @@ class PodcastController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
+            'category' => 'nullable|string|max:255',
         ]);
 
         $imagePath = $podcast->image; 
@@ -96,9 +96,9 @@ class PodcastController extends Controller
 
         $validated['image'] = $imagePath;
 
-        return response()->json([
+      /*  return response()->json([
             'image' => $imagePath
-        ], 500);
+        ], 500);*/
 
     
         $podcast->update($validated);

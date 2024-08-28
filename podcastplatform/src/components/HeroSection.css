@@ -39,7 +39,7 @@
   
   @media screen and (max-width: 960px) {
     .hero-container > h1 {
-      font-size: 60px;
+      font-size: 40px;
       margin-top: -150px;
     }
   }
@@ -57,11 +57,12 @@
     .btn-mobile {
       display: block;
       text-decoration: none;
+      
     }
 
     .hero-btns .btn {
       font-size: 14px; 
-      padding: 8px 16px; 
+      padding: 6px 12px; 
       width: auto;
     }
   
