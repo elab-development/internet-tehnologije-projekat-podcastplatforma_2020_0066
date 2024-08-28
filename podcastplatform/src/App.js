@@ -13,11 +13,11 @@ import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
 import AddPod from "./pages/Add";
 import Podcastp from "./pages/Showpod";
-import { AuthProvider, useAuth } from "./components/AuthContext";
+//import { AuthProvider, useAuth } from "./components/AuthContext";
 
 function App() {
   return (
-    <AuthProvider>
+   
       <Router>
         <Navbar />
         <Routes>
@@ -37,7 +37,7 @@ function App() {
           <Route path="/podcast" exact element={<Podcastp />} />
         </Routes>
       </Router>
-    </AuthProvider>
+ 
   );
 }
 
