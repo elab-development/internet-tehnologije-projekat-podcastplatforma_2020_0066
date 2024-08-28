@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { Button } from "./Button.js";
-import { useAuth } from "./AuthContext";
+import axios from "./services/axios"; 
 
 function Navbar() {
   const [click, setClick] = useState(false);

@@ -7,7 +7,7 @@ import pod2 from "./images/pod2.avif";
 import pod3 from "./images/pod3.jpg";
 import pod4 from "./images/pod4.png";
 import pod5 from "./images/pod5.jpeg";
-import { useAuth } from "./AuthContext";
+import axios from "./services/axios"; 
 
 function Podcasts() {
   const { currentUser } = useAuth();

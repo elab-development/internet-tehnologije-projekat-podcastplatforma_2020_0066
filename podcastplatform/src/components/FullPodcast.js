@@ -4,7 +4,7 @@ import pod5 from "./images/pod5.jpeg";
 import episode1Audio from "./audio/episode1.mp3";
 import episode2Audio from "./audio/episode2.mp3";
 import episode3Audio from "./audio/episode3.mp3";
-import { useAuth } from "./AuthContext";
+import axios from "./services/axios"; 
 
 const podcastData = {
   id: 1,
