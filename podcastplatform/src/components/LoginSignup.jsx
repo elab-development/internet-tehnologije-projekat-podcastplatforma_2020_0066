@@ -16,18 +16,14 @@ function LoginSignup() {
     e.preventDefault();
     setError("");
 
-    console.log("Action:", action);
-    console.log("Email:", email);
-    console.log("Username:", username);
-    console.log("Password:", password);
-    console.log("Is Admin:", isAdmin);
-
     try {
       if (action === "Login") {
         console.log("Sending login request...");
         const response = await axios.post("/login", { email, password });
+        //const { token, user } = response.data;
         console.log("Login response:", response.data);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         navigate("/mypage");
       } else {
         if (username === "" || email === "" || password === "") {

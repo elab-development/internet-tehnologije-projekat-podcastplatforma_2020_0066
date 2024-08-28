@@ -2,7 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import FavoriteButton from "./FavButton";
 
-function PodItem({ src, text, label, path, podcastId, isFavorited }) {
+function PodItem({
+  src,
+  text,
+  label,
+  path,
+  podcastId,
+  isFavorited,
+  currentUser,
+}) {
   return (
     <>
       <li className="pod__item">
@@ -12,7 +20,11 @@ function PodItem({ src, text, label, path, podcastId, isFavorited }) {
           </figure>
           <div className="pod__item__info">
             <h5 className="pod__item__text">{text}</h5>
-            <FavoriteButton podcastId={podcastId} isFavorited={isFavorited} />
+            <FavoriteButton
+              podcastId={podcastId}
+              isFavorited={isFavorited}
+              currentUser={currentUser}
+            />
           </div>
         </Link>
       </li>

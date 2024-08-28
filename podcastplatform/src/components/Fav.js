@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Fav.css";
+import FavoriteButton from "./FavButton";
 import PodItem from "./PodItem.js";
 import { Button } from "./Button.js";
 import pod1 from "./images/pod1.jpg";
@@ -13,7 +14,7 @@ function Podcasts() {
   const [currentUser, setCurrentUser] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  /*
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -23,6 +24,7 @@ function Podcasts() {
             headers: { Authorization: `Bearer ${token}` },
           });
           setCurrentUser(userResponse.data);
+          console.log("Fetched user data:", userResponse.data);
 
           const favResponse = await axios.get("/user/favorites", {
             headers: { Authorization: `Bearer ${token}` },
@@ -38,6 +40,36 @@ function Podcasts() {
     };
 
     fetchUserData();
+  }, []);*/
+
+  useEffect(() => {
+    const loadUserData = () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+
+      if (user && token) {
+        setCurrentUser(user);
+
+        axios
+          .get("/user/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((response) => {
+            setFavorites(response.data);
+          })
+          .catch((error) => {
+            console.error("Failed to fetch favorites", error);
+            setFavorites([]);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
   }, []);
 
   if (loading) {
@@ -51,13 +83,19 @@ function Podcasts() {
         {favorites.length > 0 ? (
           <ul className="pod__items">
             {favorites.map((podcast) => (
-              <PodItem
-                key={podcast.id}
-                src={podcast.image}
-                text={podcast.description}
-                label={podcast.category}
-                path={`/podcast`}
-              />
+              <li key={podcast.id}>
+                <PodItem
+                  src={podcast.image}
+                  text={podcast.description}
+                  label={podcast.category}
+                  path={`/podcast`}
+                />
+                <FavoriteButton
+                  podcastId={podcast.id}
+                  isFavorited={true}
+                  currentUser={currentUser}
+                />
+              </li>
             ))}
           </ul>
         ) : (

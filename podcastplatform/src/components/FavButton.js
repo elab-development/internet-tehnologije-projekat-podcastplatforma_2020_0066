@@ -4,12 +4,12 @@ import axios from "./services/axios";
 function FavoriteButton({ podcastId, isFavorited, currentUser }) {
   const [favorited, setFavorited] = useState(isFavorited);
 
-  if (!currentUser) {
-    alert("You must be logged in to favorite a podcast.");
-    return;
-  }
-
   const handleFavorite = async () => {
+    if (!currentUser) {
+      alert("You must be logged in to favorite a podcast.");
+      return;
+    }
+
     const token = localStorage.getItem("token");
     if (token) {
       try {
