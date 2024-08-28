@@ -14,38 +14,11 @@ function Podcasts() {
   const [currentUser, setCurrentUser] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
-  /*
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const userResponse = await axios.get("/user", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setCurrentUser(userResponse.data);
-          console.log("Fetched user data:", userResponse.data);
-
-          const favResponse = await axios.get("/user/favorites", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setFavorites(favResponse.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-        setCurrentUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);*/
 
   useEffect(() => {
     const loadUserData = () => {
-      const user = JSON.parse(sessionStorage.getItem("user"));
-      const token = sessionStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
 
       if (user && token) {
         setCurrentUser(user);

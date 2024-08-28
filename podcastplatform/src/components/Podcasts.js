@@ -12,13 +12,16 @@ function Podcasts() {
   useEffect(() => {
     const fetchUserDataAndPodcasts = async () => {
       try {
-        /*const token = localStorage.getItem("token");
+        // Uncomment and adjust if you need user data
+        /*
+        const token = localStorage.getItem("token");
         if (token) {
           const userResponse = await axios.get("/user", {
             headers: { Authorization: `Bearer ${token}` },
           });
           setCurrentUser(userResponse.data);
-        }*/
+        }
+        */
 
         const response = await axios.get("http://127.0.0.1:8000/api/podcasts");
         console.log("Fetched podcasts data:", response.data);
@@ -40,30 +43,29 @@ function Podcasts() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <div>
-            <ul className="pod__items">
-              {podcasts.length > 0 ? (
-                podcasts.map((podcast) => (
-                  <PodItem
-                    key={podcast.id}
-                    src={
-                      podcast.image
-                        ? `${process.env.REACT_APP_API_URL}/storage/${podcast.image}`
-                        : pod1
-                    }
-                    text={podcast.description}
-                    label={podcast.category || "Category"} // Adjust as needed
-                    path={`/podcast`}
-                    //podcastId={podcast.id}
-                    //isFavorited={false}
-                    //currentUser={currentUser}
-                  />
-                ))
-              ) : (
-                <p>No podcasts available</p>
-              )}
-            </ul>
-          </div>
+          <ul className="pod__items">
+            {podcasts.length > 0 ? (
+              podcasts.map((podcast) => (
+                <PodItem
+                  key={podcast.id}
+                  src={
+                    podcast.image
+                      ? `${process.env.REACT_APP_API_URL}/storage/${podcast.image}`
+                      : pod1
+                  }
+                  text={podcast.description}
+                  label={podcast.category}
+                  path={`/podcast`} // /${podcast.id}
+                  podcastId={podcast.id}
+                  isFavorited={false}
+                  s
+                  currentUser={currentUser}
+                />
+              ))
+            ) : (
+              <p>No podcasts available</p>
+            )}
+          </ul>
         )}
       </div>
     </div>
