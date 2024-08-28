@@ -5,16 +5,19 @@ import "./Footer.css";
 import axios from "./services/axios"; 
 
 function Footer() {
-  const { isAuthenticated, logout } = useAuth();
+  const isAuthenticated = !!localStorage.getItem("token");
   const navigate = useNavigate();
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (isAuthenticated) {
-      logout();
-      //navigate("/sign-up");
-    } //else {
-    // navigate("/sign-up");
-    // }
+      try {
+        await axios.post("/logout");
+        localStorage.removeItem("token"); 
+        
+      } catch (error) {
+        console.error("Error logging out:", error);
+      }
+    }
   };
 
   return (
