@@ -35,6 +35,28 @@ const podcastData = {
 };
 
 function PodcastPage() {
+
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get("/user", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setCurrentUser(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+        setCurrentUser(null);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <div className="podcast-page">
       <div className="podcast-details">
@@ -52,7 +74,7 @@ function PodcastPage() {
               <li key={episode.id} className="episode-item">
                 <h4>{episode.title}</h4>
                 <p>{episode.description}</p>
-                <AudioPlayer audioUrl={episode.audioUrl} />
+                <AudioPlayer audioUrl={episode.audioUrl} currentUser={currentUser}/>
               </li>
             ))}
           </ul>
@@ -62,9 +84,8 @@ function PodcastPage() {
   );
 }
 
-function AudioPlayer({ audioUrl }) {
+function AudioPlayer({ audioUrl, currentUser }) {
   const audioRef = useRef(null);
-  const { currentUser } = useAuth();
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
