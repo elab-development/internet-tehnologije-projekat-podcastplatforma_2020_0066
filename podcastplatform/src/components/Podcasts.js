@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./Podcasts.css";
 import PodItem from "./PodItem.js";
 import pod1 from "./images/pod1.jpg";
-import pod2 from "./images/pod2.avif";
-import pod3 from "./images/pod3.jpg";
-import pod4 from "./images/pod4.png";
-import pod5 from "./images/pod5.jpeg";
 import axios from "./services/axios.js";
 
 function Podcasts() {
@@ -46,7 +42,7 @@ function Podcasts() {
                         : pod1
                     }
                     text={podcast.description}
-                    //label={podcast.category || "Category"} // Adjust as needed
+                    label={podcast.category || "Category"} // Adjust as needed
                     path={`/podcast`}
                   />
                 ))
