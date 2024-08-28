@@ -17,6 +17,8 @@ class PodcastController extends Controller
         return response()->json(Podcast::with('user')->get());
     }
 
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -166,4 +168,16 @@ public function favorites()
 
     return response()->json($favorites);
 }
+
+
+public function getall()
+{
+    try {
+        $podcasts = Podcast::all();
+        return response()->json($podcasts);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to retrieve podcasts.'], 500);
+    }
+}
+
 }

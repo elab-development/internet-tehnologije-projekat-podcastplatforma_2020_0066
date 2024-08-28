@@ -20,4 +20,10 @@ class Podcast extends Model
     {
         return $this->hasMany(Episode::class);
     }
+    
+    public function favorites()
+{
+    return $this->hasMany(Favorite::class);
+}
+
 }

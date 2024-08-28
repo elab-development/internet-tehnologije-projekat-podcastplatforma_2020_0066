@@ -22,8 +22,11 @@ function LoginSignup() {
         const response = await axios.post("/login", { email, password });
         //const { token, user } = response.data;
         console.log("Login response:", response.data);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        sessionStorageStorage.setItem("token", response.data.token);
+        sessionStorageStorage.setItem(
+          "user",
+          JSON.stringify(response.data.user)
+        );
         navigate("/mypage");
       } else {
         if (username === "" || email === "" || password === "") {

@@ -60,7 +60,11 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return response()->json(['message' => 'Signup successful']);
+        return response()->json([
+            'message' => 'Login successful',
+        ]);
+    
+
     }
 
     public function logout(Request $request)
@@ -90,7 +94,10 @@ class AuthController extends Controller
 
             Auth::logout();
             return response()->json(['message' => 'Logged out']);
-        }catch (\Exception $e) {
+        
+
+
+            }catch (\Exception $e) {
            
             return response()->json([
                 'error' => 'Logout failed',

@@ -13,6 +13,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Route::apiResource('podcasts', PodcastController::class);
 
+Route::get('/podcasts/all', [PodcastController::class, 'getall']);
+
 Route::get('/podcasts', [PodcastController::class, 'index']); 
 Route::post('/podcasts', [PodcastController::class, 'store'])->middleware('auth:sanctum'); 
 Route::get('/podcasts/{id}', [PodcastController::class, 'show']);
