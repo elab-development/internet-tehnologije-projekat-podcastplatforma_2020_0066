@@ -14,7 +14,7 @@ function Podcasts() {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/podcasts");
         console.log("Fetched podcasts data:", response.data);
-        setPodcasts(response.data.slice(0, 4));
+        setPodcasts(response.data.slice(4, 8));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

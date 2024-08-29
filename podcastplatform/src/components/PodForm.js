@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./PodForm.css";
 import axios from "./services/axios";
 
@@ -11,8 +11,13 @@ function AddEpisode() {
   const [episodeDescription, setEpisodeDescription] = useState("");
   const [episodeFile, setEpisodeFile] = useState(null);
   const [selectedPodcast, setSelectedPodcast] = useState("");
+  const [selectedEpisode, setSelectedEpisode] = useState("");
   const [error, setError] = useState("");
   const [podcasts, setPodcasts] = useState([]);
+  const [episodes, setEpisodes] = useState([]);
+
+  const podcastImageRef = useRef(null);
+  const episodeFileRef = useRef(null);
 
   useEffect(() => {
     const fetchPodcasts = async () => {
@@ -33,6 +38,25 @@ function AddEpisode() {
     fetchPodcasts();
   }, []);
 
+  const handlePodcastChange = async (e) => {
+    const podcastId = e.target.value;
+    setSelectedPodcast(podcastId);
+    setEpisodes([]);
+
+    if (podcastId) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`/podcasts/${podcastId}/episodes`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setEpisodes(response.data);
+      } catch (error) {
+        console.error("Failed to fetch episodes", error);
+        setError("Failed to fetch episodes.");
+      }
+    }
+  };
+
   const handleActionChange = (e) => {
     setAction(e.target.value);
     setError("");
@@ -42,6 +66,13 @@ function AddEpisode() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("No authentication token found.");
+      return;
+    }
 
     try {
       if (action === "newPodcast") {
@@ -79,9 +110,8 @@ function AddEpisode() {
         });
 
         alert("Podcast and Episode added successfully!");
-
         resetForm();
-      } else {
+      } else if (action === "existingPodcast") {
         if (
           !selectedPodcast ||
           !episodeTitle ||
@@ -104,7 +134,33 @@ function AddEpisode() {
         });
 
         alert("Episode added successfully!");
+        resetForm();
+      } else if (action === "deletePodcast") {
+        if (!selectedPodcast) {
+          setError("Please select a podcast to delete.");
+          return;
+        }
 
+        await axios.delete(`/podcasts/${selectedPodcast}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        alert("Podcast deleted successfully!");
+        resetForm();
+      } else if (action === "deleteEpisode") {
+        if (!selectedPodcast || !selectedEpisode) {
+          setError("Please select a podcast and an episode to delete.");
+          return;
+        }
+
+        await axios.delete(
+          `/podcasts/${selectedPodcast}/episodes/${selectedEpisode}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        alert("Episode deleted successfully!");
         resetForm();
       }
     } catch (error) {
@@ -121,13 +177,19 @@ function AddEpisode() {
     setEpisodeDescription("");
     setEpisodeFile(null);
     setSelectedPodcast("");
-    document.querySelector('input[type="file"][accept="image/*"]').value = "";
-    document.querySelector('input[type="file"][accept="audio/*"]').value = "";
+    setSelectedEpisode("");
+    if (podcastImageRef.current) {
+      podcastImageRef.current.value = "";
+    }
+
+    if (episodeFileRef.current) {
+      episodeFileRef.current.value = "";
+    }
   };
 
   return (
     <div className="add-episode-container">
-      <h1>Add Episode</h1>
+      <h1>Editing form, please choose:</h1>
       <form onSubmit={handleSubmit}>
         <div className="option-selection">
           <label>
@@ -149,6 +211,26 @@ function AddEpisode() {
               onChange={handleActionChange}
             />
             Add Episode to Existing Podcast
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="action"
+              value="deletePodcast"
+              checked={action === "deletePodcast"}
+              onChange={handleActionChange}
+            />
+            Delete Podcast
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="action"
+              value="deleteEpisode"
+              checked={action === "deleteEpisode"}
+              onChange={handleActionChange}
+            />
+            Delete Episode
           </label>
         </div>
 
@@ -177,6 +259,7 @@ function AddEpisode() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setPodcastImage(e.target.files[0])}
+                ref={podcastImageRef}
                 required
               />
             </div>
@@ -184,8 +267,28 @@ function AddEpisode() {
         )}
 
         {action === "existingPodcast" && (
+          <>
+            <div className="input-field">
+              <label>Select Podcast</label>
+              <select
+                value={selectedPodcast}
+                onChange={handlePodcastChange}
+                required
+              >
+                <option value="">-- Select Podcast --</option>
+                {podcasts.map((podcast) => (
+                  <option key={podcast.id} value={podcast.id}>
+                    {podcast.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+
+        {action === "deletePodcast" && (
           <div className="input-field">
-            <label>Select Podcast</label>
+            <label>Select Podcast to Delete</label>
             <select
               value={selectedPodcast}
               onChange={(e) => setSelectedPodcast(e.target.value)}
@@ -194,46 +297,85 @@ function AddEpisode() {
               <option value="">-- Select Podcast --</option>
               {podcasts.map((podcast) => (
                 <option key={podcast.id} value={podcast.id}>
-                  {podcast.title} {/* Display podcast title */}
+                  {podcast.title}
                 </option>
               ))}
             </select>
           </div>
         )}
 
-        <div className="input-field">
-          <label>Episode Title</label>
-          <input
-            type="text"
-            value={episodeTitle}
-            onChange={(e) => setEpisodeTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-field">
-          <label>Episode Description</label>
-          <textarea
-            value={episodeDescription}
-            onChange={(e) => setEpisodeDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-field">
-          <label>Episode MP3 File</label>
-          <input
-            type="file"
-            accept="audio/mp3"
-            onChange={(e) => setEpisodeFile(e.target.files[0])}
-            required
-          />
-        </div>
+        {action === "deleteEpisode" && (
+          <>
+            <div className="input-field">
+              <label>Select Podcast</label>
+              <select
+                value={selectedPodcast}
+                onChange={handlePodcastChange}
+                required
+              >
+                <option value="">-- Select Podcast --</option>
+                {podcasts.map((podcast) => (
+                  <option key={podcast.id} value={podcast.id}>
+                    {podcast.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {selectedPodcast && (
+              <div className="input-field">
+                <label>Select Episode to Delete</label>
+                <select
+                  value={selectedEpisode}
+                  onChange={(e) => setSelectedEpisode(e.target.value)}
+                  required
+                >
+                  <option value="">-- Select Episode --</option>
+                  {episodes.map((episode) => (
+                    <option key={episode.id} value={episode.id}>
+                      {episode.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </>
+        )}
 
-        {error && <div className="error-message">{error}</div>}
+        {(action === "newPodcast" || action === "existingPodcast") && (
+          <>
+            <div className="input-field">
+              <label>Episode Title</label>
+              <input
+                type="text"
+                value={episodeTitle}
+                onChange={(e) => setEpisodeTitle(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-field">
+              <label>Episode Description</label>
+              <textarea
+                value={episodeDescription}
+                onChange={(e) => setEpisodeDescription(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-field">
+              <label>Episode File</label>
+              <input
+                type="file"
+                accept="audio/*"
+                onChange={(e) => setEpisodeFile(e.target.files[0])}
+                ref={episodeFileRef}
+                required
+              />
+            </div>
+          </>
+        )}
 
-        <button type="submit" className="submit-button">
-          {action === "newPodcast" ? "Add Podcast and Episode" : "Add Episode"}
-        </button>
+        <button type="submit">Submit</button>
       </form>
+      {error && <p className="error">{error}</p>}
     </div>
   );
 }

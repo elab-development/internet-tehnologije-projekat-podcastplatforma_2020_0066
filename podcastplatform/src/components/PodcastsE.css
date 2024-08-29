@@ -19,14 +19,23 @@
   
   
   .pod__items {
+    /*margin-bottom: 24px;
+    gap: 16px; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     margin-bottom: 24px;
-    gap: 16px; 
+    gap: 16px;
   }
   
   .pod__item {
-    display: flex;
+    /*display: flex;
     flex: 1;
     margin: 0 1rem;
+    border-radius: 10px;*/
+    flex: 1 1 calc(25% - 16px); /* Each item will take up 25% width minus the gap */
+    box-sizing: border-box;
+    margin-bottom: 16px; /* Added for vertical spacing */
     border-radius: 10px;
   }
   
@@ -48,14 +57,14 @@
     padding-top: 67%;
     overflow: hidden;
   }
-
+/*
   .pod__items {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 24px;
     gap: 16px; 
-  }
+  }*/
   
   .fade-img {
     animation-name: fade-img;
@@ -111,17 +120,27 @@
     }
   }
   
+  /*
   @media only screen and (min-width: 1024px) {
     .pod__items {
       display: flex;
+     
     }
-  }
+  }*/
   
   @media only screen and (max-width: 1024px) {
     .pod__item {
+      flex: 1 1 calc(50% - 16px); /* Two items per row on smaller screens */
       margin-bottom: 2rem;
     }
   }
+
+
+@media only screen and (max-width: 768px) {
+  .pod__item {
+    flex: 1 1 calc(100% - 16px); /* One item per row on smaller screens */
+  }
+}
 
   /*
 
