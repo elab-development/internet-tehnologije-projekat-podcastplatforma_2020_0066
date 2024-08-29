@@ -382,10 +382,10 @@ function Podcasts() {
                 className="btns"
                 buttonStyle="btn--primary"
                 buttonSize="btn--large"
-                onClick={() => console.log("hey")}
+                onClick={() => console.log("clicked")}
                 to="/addpod"
               >
-                Add new episode
+                Add new episode or podcast
                 <i className="far fa-play-circle" />
               </Button>
             </div>

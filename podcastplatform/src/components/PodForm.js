@@ -77,6 +77,10 @@ function AddEpisode() {
         await axios.post(`/podcasts/${podcastId}/episodes`, formDataEpisode, {
           headers: { "Content-Type": "multipart/form-data" },
         });
+
+        alert("Podcast and Episode added successfully!");
+
+        resetForm();
       } else {
         if (
           !selectedPodcast ||
@@ -98,9 +102,11 @@ function AddEpisode() {
         await axios.post(`/podcasts/${selectedPodcast}/episodes`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-      }
 
-      resetForm();
+        alert("Episode added successfully!");
+
+        resetForm();
+      }
     } catch (error) {
       console.error("Failed to submit form", error);
       setError("Failed to submit form.");
@@ -115,6 +121,8 @@ function AddEpisode() {
     setEpisodeDescription("");
     setEpisodeFile(null);
     setSelectedPodcast("");
+    document.querySelector('input[type="file"][accept="image/*"]').value = "";
+    document.querySelector('input[type="file"][accept="audio/*"]').value = "";
   };
 
   return (
