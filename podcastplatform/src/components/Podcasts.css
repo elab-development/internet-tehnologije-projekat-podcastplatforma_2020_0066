@@ -95,7 +95,7 @@
     font-size: 18px;
     line-height: 24px;
   }
-  .favorite-btn {
+  .favorite-button{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -106,16 +106,16 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
-  .favorite-btn:hover {
+  .favorite-button:hover {
     background-color: #e76f51;
     transform: scale(1.05);
   }
   
-  .favorite-btn.unfavorite {
+  .favorite-button.unfavorite {
     background-color: #e63946;
   }
   
-  .favorite-btn.unfavorite:hover {
+  .favorite-button.unfavorite:hover {
     background-color: #d62839;
   }
   

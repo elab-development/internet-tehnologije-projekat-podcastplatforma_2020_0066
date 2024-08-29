@@ -35,12 +35,13 @@ function PodItem({
           </figure>
           <div className="pod__item__info">
             <h5 className="pod__item__text">{text}</h5>
-            <FavoriteButton
-              podcastId={podcastId}
-              isFavorited={isFavorited}
-              currentUser={currentUser}
-            />
           </div>
+          <FavoriteButton
+            podcastId={podcastId}
+            isFavorited={isFavorited}
+            currentUser={currentUser}
+            className="favorite-button"
+          />
         </Link>
       </li>
     </>

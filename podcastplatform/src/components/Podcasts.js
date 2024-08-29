@@ -12,9 +12,39 @@ function Podcasts() {
   useEffect(() => {
     const fetchUserDataAndPodcasts = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/podcasts");
-        console.log("Fetched podcasts data:", response.data);
-        setPodcasts(response.data.slice(4, 8));
+        const token = localStorage.getItem("token");
+        //let favorites = [];
+
+        if (token) {
+          const userResponse = await axios.get("/user", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          setCurrentUser(userResponse.data);
+
+          const favoritesResponse = await axios.get("/user/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const favorites = favoritesResponse.data.map((podcast) => podcast.id);
+
+          const podcastsResponse = await axios.get(
+            "http://127.0.0.1:8000/api/podcasts"
+          );
+
+          const podcastsData = podcastsResponse.data
+            .slice(4, 8)
+            .map((podcast) => ({
+              ...podcast,
+              isFavorited: favorites.includes(podcast.id),
+            }));
+
+          setPodcasts(podcastsData);
+        } else {
+          const response = await axios.get(
+            "http://127.0.0.1:8000/api/podcasts"
+          );
+          setPodcasts(response.data.slice(4, 8));
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -48,7 +78,7 @@ function Podcasts() {
                   label={podcast.category}
                   path={`/podcast/${podcast.id}`}
                   podcastId={podcast.id}
-                  isFavorited={false}
+                  isFavorited={podcast.isFavorited}
                   currentUser={currentUser}
                 />
               ))

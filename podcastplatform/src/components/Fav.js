@@ -30,7 +30,15 @@ function Podcasts() {
             const allPodcastsResponse = await axios.get("/podcasts", {
               headers: { Authorization: `Bearer ${token}` },
             });
-            setAllPodcasts(allPodcastsResponse.data);
+
+            const podcastsData = allPodcastsResponse.data.map((podcast) => ({
+              ...podcast,
+              isFavorited: favoritesResponse.data.some(
+                (fav) => fav.id === podcast.id
+              ),
+            }));
+
+            setAllPodcasts(podcastsData);
           }
         } catch (error) {
           console.error("Failed to fetch data", error);
@@ -103,7 +111,7 @@ function Podcasts() {
                     label={podcast.category || "Category"}
                     path={`/podcast/${podcast.id}`}
                     podcastId={podcast.id}
-                    isFavorited={false}
+                    isFavorited={podcast.isFavorited}
                     currentUser={currentUser}
                   />
                 ))}

@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "./services/axios";
 
 function FavoriteButton({ podcastId, isFavorited, currentUser }) {
   const [favorited, setFavorited] = useState(isFavorited);
+
+  useEffect(() => {
+    setFavorited(isFavorited);
+  }, [isFavorited]);
 
   const handleFavorite = async () => {
     if (!currentUser) {
@@ -34,7 +38,7 @@ function FavoriteButton({ podcastId, isFavorited, currentUser }) {
   };
 
   return (
-    <button onClick={handleFavorite}>
+    <button onClick={handleFavorite} className="favorite-button">
       {favorited ? "Unfavorite" : "Favorite"}
     </button>
   );

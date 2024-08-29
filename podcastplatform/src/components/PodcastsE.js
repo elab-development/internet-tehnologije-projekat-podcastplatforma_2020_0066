@@ -6,15 +6,36 @@ import axios from "./services/axios.js";
 
 function Podcasts() {
   const [podcasts, setPodcasts] = useState([]);
-  //const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchPodcasts = async () => {
       try {
+        const token = localStorage.getItem("token");
+        let favorites = [];
+
+        if (token) {
+          const userResponse = await axios.get("/user", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setCurrentUser(userResponse.data);
+
+          const favoritesResponse = await axios.get("/user/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          favorites = favoritesResponse.data.map((podcast) => podcast.id);
+        }
+
         const response = await axios.get(
           "http://127.0.0.1:8000/api/podcasts/all"
         );
-        setPodcasts(response.data);
+
+        const podcastsData = response.data.map((podcast) => ({
+          ...podcast,
+          isFavorited: favorites.includes(podcast.id),
+        }));
+
+        setPodcasts(podcastsData);
       } catch (error) {
         console.error("Error fetching podcasts:", error);
       }
@@ -40,6 +61,7 @@ function Podcasts() {
                 text={podcast.title}
                 label={podcast.category || "Category"}
                 path={`/podcast/${podcast.id}`}
+                isFavorited={podcast.isFavorited}
               />
             ))}
           </ul>

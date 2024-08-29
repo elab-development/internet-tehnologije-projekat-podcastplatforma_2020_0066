@@ -101,6 +101,13 @@ h1 {
   line-height: 24px;
 }
 
+.favorite-button {
+  font-size: 15px;
+  align-self: center;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
 @media only screen and (min-width: 1200px) {
   .content__blog__container {
     width: 84%;
