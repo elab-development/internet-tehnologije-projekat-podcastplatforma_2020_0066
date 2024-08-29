@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { Button } from "./Button.js";
-import axios from "./services/axios"; 
+import axios from "./services/axios";
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const navigate = useNavigate();
-  
+
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -32,7 +32,13 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/logout"); 
+      await axios.post(
+        "/logout",
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       localStorage.removeItem("token");
     } catch (error) {
       console.error("Logout failed", error);
