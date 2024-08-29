@@ -37,3 +37,4 @@ Route::get('/signup', [AuthController::class, 'showSignupForm']);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
+Route::get('/search-podcasts', [PodcastController::class, 'search']);

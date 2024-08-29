@@ -108,6 +108,16 @@ h1 {
   margin-bottom: 10px;
 }
 
+.search-input {
+  padding: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
 @media only screen and (min-width: 1200px) {
   .content__blog__container {
     width: 84%;

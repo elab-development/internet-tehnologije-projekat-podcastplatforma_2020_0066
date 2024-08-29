@@ -197,4 +197,17 @@ public function getall()
     }
 }
 
+public function search(Request $request)
+{
+    $query = $request->input('query');
+    $sortBy = $request->input('sort_by', 'title');
+    $sortOrder = $request->input('sort_order', 'asc'); 
+    
+    $podcasts = Podcast::where('title', 'like', "%{$query}%")
+        ->orderBy($sortBy, $sortOrder)
+        ->get();
+
+    return response()->json($podcasts);
+}
+
 }

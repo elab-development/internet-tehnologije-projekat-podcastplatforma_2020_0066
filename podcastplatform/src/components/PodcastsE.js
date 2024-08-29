@@ -7,6 +7,8 @@ import axios from "./services/axios.js";
 function Podcasts() {
   const [podcasts, setPodcasts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredPodcasts, setFilteredPodcasts] = useState([]);
 
   useEffect(() => {
     const fetchPodcasts = async () => {
@@ -36,6 +38,7 @@ function Podcasts() {
         }));
 
         setPodcasts(podcastsData);
+	setFilteredPodcasts(podcastsData); 
       } catch (error) {
         console.error("Error fetching podcasts:", error);
       }
@@ -44,13 +47,44 @@ function Podcasts() {
     fetchPodcasts();
   }, []);
 
+useEffect(() => {
+    const fetchFilteredPodcasts = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/search-podcasts?query=${searchQuery}`
+        );
+        setFilteredPodcasts(response.data);
+      } catch (error) {
+        console.error("Error fetching filtered podcasts:", error);
+      }
+    };
+
+    if (searchQuery.length > 0) {
+      fetchFilteredPodcasts();
+    } else {
+      setFilteredPodcasts(podcasts);
+    }
+  }, [searchQuery, podcasts]);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
     <div className="pod">
       <h1>A wide variety of podcasts!</h1>
+ <input
+        type="text"
+        placeholder="Search podcasts..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+        className="search-input"
+      />
       <div className="pod__container">
         <div className="pod__wrapper ">
           <ul className="pod__items">
-            {podcasts.map((podcast) => (
+
+           {filteredPodcasts.map((podcast) => (
               <PodItem
                 key={podcast.id}
                 src={
