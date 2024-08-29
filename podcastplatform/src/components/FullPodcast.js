@@ -84,7 +84,7 @@ function PodcastPage() {
             {episodes.length > 0 ? (
               episodes.map((episode) => {
                 const audioUrl = episode.audio_file
-                  ? episode.audio_file.includes("http") // Ensure URL is correctly formed
+                  ? episode.audio_file.includes("http")
                     ? episode.audio_file
                     : `${process.env.REACT_APP_MEDIA_URL}/storage/${episode.audio_file}`
                   : null;

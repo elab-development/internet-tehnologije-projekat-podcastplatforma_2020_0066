@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./PodForm.css";
+import axios from "./services/axios";
 
 function AddEpisode() {
   const [action, setAction] = useState("newPodcast");
@@ -11,6 +12,26 @@ function AddEpisode() {
   const [episodeFile, setEpisodeFile] = useState(null);
   const [selectedPodcast, setSelectedPodcast] = useState("");
   const [error, setError] = useState("");
+  const [podcasts, setPodcasts] = useState([]);
+
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get("/podcasts", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setPodcasts(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch podcasts", error);
+        setError("Failed to fetch podcasts.");
+      }
+    };
+
+    fetchPodcasts();
+  }, []);
 
   const handleActionChange = (e) => {
     setAction(e.target.value);
@@ -18,53 +39,72 @@ function AddEpisode() {
     resetForm();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (action === "newPodcast") {
-      if (
-        !podcastName ||
-        !podcastDescription ||
-        !podcastImage ||
-        !episodeTitle ||
-        !episodeDescription ||
-        !episodeFile
-      ) {
-        setError(
-          "All fields are required for adding a new podcast and episode."
-        );
-        return;
+    try {
+      if (action === "newPodcast") {
+        if (
+          !podcastName ||
+          !podcastDescription ||
+          !podcastImage ||
+          !episodeTitle ||
+          !episodeDescription ||
+          !episodeFile
+        ) {
+          setError(
+            "All fields are required for adding a new podcast and episode."
+          );
+          return;
+        }
+
+        const formDataPodcast = new FormData();
+        formDataPodcast.append("title", podcastName);
+        formDataPodcast.append("description", podcastDescription);
+        formDataPodcast.append("image", podcastImage);
+
+        const podcastResponse = await axios.post("/podcasts", formDataPodcast, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        const podcastId = podcastResponse.data.id;
+
+        const formDataEpisode = new FormData();
+        formDataEpisode.append("title", episodeTitle);
+        formDataEpisode.append("description", episodeDescription);
+        formDataEpisode.append("audio_file", episodeFile);
+
+        await axios.post(`/podcasts/${podcastId}/episodes`, formDataEpisode, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        if (
+          !selectedPodcast ||
+          !episodeTitle ||
+          !episodeDescription ||
+          !episodeFile
+        ) {
+          setError(
+            "All fields are required for adding an episode to an existing podcast."
+          );
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("title", episodeTitle);
+        formData.append("description", episodeDescription);
+        formData.append("audio_file", episodeFile);
+
+        await axios.post(`/podcasts/${selectedPodcast}/episodes`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
       }
 
-      console.log("New podcast added:", podcastName, podcastDescription);
-      console.log(
-        "Episode added to new podcast:",
-        episodeTitle,
-        episodeDescription
-      );
-    } else {
-      if (
-        !selectedPodcast ||
-        !episodeTitle ||
-        !episodeDescription ||
-        !episodeFile
-      ) {
-        setError(
-          "All fields are required for adding an episode to an existing podcast."
-        );
-        return;
-      }
-
-      console.log(
-        "Episode added to existing podcast:",
-        selectedPodcast,
-        episodeTitle,
-        episodeDescription
-      );
+      resetForm();
+    } catch (error) {
+      console.error("Failed to submit form", error);
+      setError("Failed to submit form.");
     }
-
-    resetForm();
   };
 
   const resetForm = () => {
@@ -144,9 +184,11 @@ function AddEpisode() {
               required
             >
               <option value="">-- Select Podcast --</option>
-              <option value="podcast1">Podcast 1</option>
-              <option value="podcast2">Podcast 2</option>
-              <option value="podcast3">Podcast 3</option>
+              {podcasts.map((podcast) => (
+                <option key={podcast.id} value={podcast.id}>
+                  {podcast.title} {/* Display podcast title */}
+                </option>
+              ))}
             </select>
           </div>
         )}

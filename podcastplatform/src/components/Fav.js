@@ -365,7 +365,7 @@ function Podcasts() {
                           : `${process.env.REACT_APP_MEDIA_URL}/${podcast.image}`
                         : pod1
                     }
-                    text={podcast.description}
+                    text={podcast.title}
                     label={podcast.category || "Category"}
                     path={`/podcast/${podcast.id}`}
                     podcastId={podcast.id}

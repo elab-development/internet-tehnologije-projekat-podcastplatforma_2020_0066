@@ -13,7 +13,6 @@ import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
 import AddPod from "./pages/Add";
 import Podcastp from "./pages/Showpod";
-//import { AuthProvider, useAuth } from "./components/AuthContext";
 
 function App() {
   return (
@@ -43,11 +42,5 @@ const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/sign-up" />;
 };
-
-/*
-const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/sign-up" />;
-};*/
 
 export default App;

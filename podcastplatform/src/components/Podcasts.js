@@ -12,17 +12,6 @@ function Podcasts() {
   useEffect(() => {
     const fetchUserDataAndPodcasts = async () => {
       try {
-        // Uncomment and adjust if you need user data
-        /*
-        const token = localStorage.getItem("token");
-        if (token) {
-          const userResponse = await axios.get("/user", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setCurrentUser(userResponse.data);
-        }
-        */
-
         const response = await axios.get("http://127.0.0.1:8000/api/podcasts");
         console.log("Fetched podcasts data:", response.data);
         setPodcasts(response.data.slice(0, 4));
@@ -57,10 +46,9 @@ function Podcasts() {
                   }
                   text={podcast.description}
                   label={podcast.category}
-                  path={`/podcast/${podcast.id}`} // /${podcast.id}
+                  path={`/podcast/${podcast.id}`}
                   podcastId={podcast.id}
                   isFavorited={false}
-                  s
                   currentUser={currentUser}
                 />
               ))

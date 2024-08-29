@@ -17,8 +17,6 @@ function Podcasts() {
         setPodcasts(response.data);
       } catch (error) {
         console.error("Error fetching podcasts:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -38,7 +36,7 @@ function Podcasts() {
                   ? `${process.env.REACT_APP_MEDIA_URL}/storage/${podcast.image}`
                   : pod1
               }
-              text={podcast.description}
+              text={podcast.title}
               label={podcast.category || "Category"}
               path={`/podcast/${podcast.id}`}
             />

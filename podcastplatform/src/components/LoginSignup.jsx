@@ -20,7 +20,6 @@ function LoginSignup() {
       if (action === "Login") {
         console.log("Sending login request...");
         const response = await axios.post("/login", { email, password });
-        //const { token, user } = response.data;
         console.log("Login response:", response.data);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));

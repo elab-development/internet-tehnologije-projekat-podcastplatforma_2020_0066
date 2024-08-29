@@ -17,6 +17,7 @@
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
+    gap: 20px;
   }
   
   .option-selection label {

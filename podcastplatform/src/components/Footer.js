@@ -1,12 +1,11 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import "./Footer.css";
 import axios from "./services/axios";
 
 function Footer() {
   const isAuthenticated = !!localStorage.getItem("token");
-  const navigate = useNavigate();
 
   const handleButtonClick = async () => {
     if (isAuthenticated) {
