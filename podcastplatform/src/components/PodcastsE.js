@@ -35,12 +35,12 @@ function Podcasts() {
               key={podcast.id}
               src={
                 podcast.image
-                  ? `${process.env.REACT_APP_API_URL}/storage/${podcast.image}`
+                  ? `${process.env.REACT_APP_MEDIA_URL}/storage/${podcast.image}`
                   : pod1
               }
               text={podcast.description}
               label={podcast.category || "Category"}
-              path={`/podcast/`}
+              path={`/podcast/${podcast.id}`}
             />
           ))}
         </ul>

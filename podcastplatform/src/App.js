@@ -17,27 +17,25 @@ import Podcastp from "./pages/Showpod";
 
 function App() {
   return (
-   
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/explore" exact element={<Explore />} />
-          <Route
-            path="/mypage"
-            exact
-            element={
-              <PrivateRoute>
-                <MyPage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/sign-up" exact element={<Login />} />
-          <Route path="/addpod" exact element={<AddPod />} />
-          <Route path="/podcast" exact element={<Podcastp />} />
-        </Routes>
-      </Router>
- 
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" exact element={<Home />} />
+        <Route path="/explore" exact element={<Explore />} />
+        <Route
+          path="/mypage"
+          exact
+          element={
+            <PrivateRoute>
+              <MyPage />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/sign-up" exact element={<Login />} />
+        <Route path="/addpod" exact element={<AddPod />} />
+        <Route path="/podcast/:podcastId" exact element={<Podcastp />} />
+      </Routes>
+    </Router>
   );
 }
 

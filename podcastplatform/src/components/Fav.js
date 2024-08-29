@@ -58,7 +58,7 @@ function Podcasts() {
             {favorites.map((podcast) => (
               <li key={podcast.id}>
                 <PodItem
-                  src={podcast.image}
+                  src={`${process.env.REACT_APP_MEDIA_URL}/storage/${podcast.image}`}
                   text={podcast.description}
                   label={podcast.category}
                   path={`/podcast`}
@@ -287,13 +287,11 @@ function Podcasts() {
         setCurrentUser(user);
 
         try {
-          // Fetch favorite podcasts
           const favoritesResponse = await axios.get("/user/favorites", {
             headers: { Authorization: `Bearer ${token}` },
           });
           setFavorites(favoritesResponse.data);
 
-          // Fetch all podcasts for admin users
           if (user.admin) {
             const allPodcastsResponse = await axios.get("/podcasts", {
               headers: { Authorization: `Bearer ${token}` },
@@ -332,7 +330,9 @@ function Podcasts() {
                 key={podcast.id}
                 src={
                   podcast.image
-                    ? `${process.env.REACT_APP_API_URL}/storage/${podcast.image}`
+                    ? podcast.image.includes("http")
+                      ? podcast.image
+                      : `${process.env.REACT_APP_MEDIA_URL}/${podcast.image}`
                     : pod1
                 }
                 text={podcast.description}
@@ -360,7 +360,9 @@ function Podcasts() {
                     key={podcast.id}
                     src={
                       podcast.image
-                        ? `${process.env.REACT_APP_API_URL}/storage/${podcast.image}`
+                        ? podcast.image.includes("http")
+                          ? podcast.image
+                          : `${process.env.REACT_APP_MEDIA_URL}/${podcast.image}`
                         : pod1
                     }
                     text={podcast.description}

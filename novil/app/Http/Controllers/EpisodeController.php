@@ -15,7 +15,18 @@ class EpisodeController extends Controller
      */
     public function index(string $podcastId)
     {
+        //$episodes = Episode::where('podcast_id', $podcastId)->get();
+        //return response()->json($episodes);
+
         $episodes = Episode::where('podcast_id', $podcastId)->get();
+
+        // Generate full URLs for audio files
+        foreach ($episodes as $episode) {
+            if ($episode->audio_file) {
+                $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
+            }
+        }
+    
         return response()->json($episodes);
     }
 
@@ -53,9 +64,18 @@ class EpisodeController extends Controller
      */
     public function show(string $podcastId, string $id)
     {
-        $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
-        $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
-        return response()->json($episode);
+       // $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
+       // $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
+       // return response()->json($episode);
+
+       $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
+
+       // Generate full URL for the audio file
+       if ($episode->audio_file) {
+           $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
+       }
+   
+       return response()->json($episode);
     }
 
     /**

@@ -1,41 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./FullPodcast.css";
-import pod5 from "./images/pod5.jpeg";
-import episode1Audio from "./audio/episode1.mp3";
-import episode2Audio from "./audio/episode2.mp3";
-import episode3Audio from "./audio/episode3.mp3";
 import axios from "./services/axios";
-
-const podcastData = {
-  id: 1,
-  name: "How I built this",
-  description:
-    "Interviews with entrepreneurs and innovators, sharing the stories behind the founding of their companies.",
-  image: pod5,
-  episodes: [
-    {
-      id: 1,
-      title: "Episode 1: Introduction",
-      description: "Welcome to our first episode!",
-      audioUrl: episode1Audio,
-    },
-    {
-      id: 2,
-      title: "Episode 2: Deep Dive",
-      description: "We dive deep into a fascinating topic.",
-      audioUrl: episode2Audio,
-    },
-    {
-      id: 3,
-      title: "Episode 3: Special Guest",
-      description: "An episode with a special guest.",
-      audioUrl: episode3Audio,
-    },
-  ],
-};
+import { useParams } from "react-router-dom";
+import pod1 from "./images/pod1.jpg";
 
 function PodcastPage() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [episodes, setEpisodes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { podcastId } = useParams();
+  const [podcast, setPodcast] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -56,29 +30,83 @@ function PodcastPage() {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    const fetchPodcastAndEpisodes = async () => {
+      try {
+        setLoading(true);
+        const podcastResponse = await axios.get(`/podcasts/${podcastId}`);
+        setPodcast(podcastResponse.data);
+
+        const episodesResponse = await axios.get(
+          `/podcasts/${podcastId}/episodes`
+        );
+        setEpisodes(episodesResponse.data);
+      } catch (error) {
+        console.error("Failed to fetch podcast or episodes", error);
+        setPodcast(null);
+        setEpisodes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPodcastAndEpisodes();
+  }, [podcastId]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!podcast) {
+    return <p>Podcast not found.</p>;
+  }
+
   return (
     <div className="podcast-page">
       <div className="podcast-details">
         <img
-          src={podcastData.image}
-          alt={podcastData.name}
+          src={
+            podcast.image
+              ? podcast.image.includes("http")
+                ? podcast.image
+                : `${process.env.REACT_APP_MEDIA_URL}/${podcast.image}`
+              : pod1
+          }
+          alt={podcast.title}
           className="podcast-image"
         />
-        <h2 className="podcast-name">{podcastData.name}</h2>
-        <p className="podcast-description">{podcastData.description}</p>
+
+        <h2 className="podcast-name">{podcast.title}</h2>
+        <p className="podcast-description">{podcast.description}</p>
         <div className="episodes-list">
           <h3>Episodes</h3>
           <ul>
-            {podcastData.episodes.map((episode) => (
-              <li key={episode.id} className="episode-item">
-                <h4>{episode.title}</h4>
-                <p>{episode.description}</p>
-                <AudioPlayer
-                  audioUrl={episode.audioUrl}
-                  currentUser={currentUser}
-                />
-              </li>
-            ))}
+            {episodes.length > 0 ? (
+              episodes.map((episode) => {
+                const audioUrl = episode.audio_file
+                  ? episode.audio_file.includes("http") // Ensure URL is correctly formed
+                    ? episode.audio_file
+                    : `${process.env.REACT_APP_MEDIA_URL}/storage/${episode.audio_file}`
+                  : null;
+                console.log("Episode Audio URL:", audioUrl);
+                return (
+                  <li key={episode.id} className="episode-item">
+                    <h4>{episode.title}</h4>
+                    <p>{episode.description}</p>
+                    {audioUrl ? (
+                      <AudioPlayer
+                        audioUrl={audioUrl}
+                        currentUser={currentUser}
+                      />
+                    ) : (
+                      <p>No audio available.</p>
+                    )}
+                  </li>
+                );
+              })
+            ) : (
+              <p>No episodes available.</p>
+            )}
           </ul>
         </div>
       </div>

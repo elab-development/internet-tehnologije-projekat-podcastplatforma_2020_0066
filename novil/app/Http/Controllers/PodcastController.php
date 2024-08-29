@@ -14,10 +14,18 @@ class PodcastController extends Controller
      */
     public function index()
     {
-        return response()->json(Podcast::with('user')->get());
+        //return response()->json(Podcast::with('user')->get());
+    
+        $podcasts = Podcast::with('user')->get();
+
+        foreach ($podcasts as $podcast) {
+            if ($podcast->image) {
+                $podcast->image = \Storage::disk('public')->url($podcast->image);
+            }
+        }
+    
+        return response()->json($podcasts);
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -62,7 +70,16 @@ class PodcastController extends Controller
     public function show(string $id)
     {
         
+        //$podcast = Podcast::with('episodes')->findOrFail($id);
+        //return response()->json($podcast);
+
         $podcast = Podcast::with('episodes')->findOrFail($id);
+
+        // Generate full URL for the image
+        if ($podcast->image) {
+            $podcast->image = \Storage::disk('public')->url($podcast->image);
+        }
+    
         return response()->json($podcast);
     }
 

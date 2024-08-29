@@ -50,12 +50,14 @@ function Podcasts() {
                   key={podcast.id}
                   src={
                     podcast.image
-                      ? `${process.env.REACT_APP_API_URL}/storage/${podcast.image}`
+                      ? podcast.image.includes("http")
+                        ? podcast.image
+                        : `${process.env.REACT_APP_MEDIA_URL}/${podcast.image}`
                       : pod1
                   }
                   text={podcast.description}
                   label={podcast.category}
-                  path={`/podcast`} // /${podcast.id}
+                  path={`/podcast/${podcast.id}`} // /${podcast.id}
                   podcastId={podcast.id}
                   isFavorited={false}
                   s
