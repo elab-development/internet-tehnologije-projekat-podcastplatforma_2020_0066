@@ -6,7 +6,7 @@ import axios from "./services/axios.js";
 
 function Podcasts() {
   const [podcasts, setPodcasts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPodcasts = async () => {
@@ -27,21 +27,23 @@ function Podcasts() {
     <div className="pod">
       <h1>A wide variety of podcasts!</h1>
       <div className="pod__container">
-        <ul className="pod__items">
-          {podcasts.map((podcast) => (
-            <PodItem
-              key={podcast.id}
-              src={
-                podcast.image
-                  ? `${process.env.REACT_APP_MEDIA_URL}/storage/${podcast.image}`
-                  : pod1
-              }
-              text={podcast.title}
-              label={podcast.category || "Category"}
-              path={`/podcast/${podcast.id}`}
-            />
-          ))}
-        </ul>
+        <div className="pod__wrapper ">
+          <ul className="pod__items">
+            {podcasts.map((podcast) => (
+              <PodItem
+                key={podcast.id}
+                src={
+                  podcast.image
+                    ? `${process.env.REACT_APP_MEDIA_URL}/storage/${podcast.image}`
+                    : pod1
+                }
+                text={podcast.title}
+                label={podcast.category || "Category"}
+                path={`/podcast/${podcast.id}`}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

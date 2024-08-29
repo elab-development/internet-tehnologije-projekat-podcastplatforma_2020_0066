@@ -38,10 +38,10 @@ class PodcastController extends Controller
         }
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
-            'category' => 'nullable|string|max:255',
+            'category' => 'nullable|string',
         ]);
 
        

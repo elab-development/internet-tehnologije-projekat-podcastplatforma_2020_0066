@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./FullPodcast.css";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "./services/axios";
-import { useParams } from "react-router-dom";
 import pod1 from "./images/pod1.jpg";
+import "./FullPodcast.css";
 
 function PodcastPage() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -10,6 +10,7 @@ function PodcastPage() {
   const [loading, setLoading] = useState(true);
   const { podcastId } = useParams();
   const [podcast, setPodcast] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -61,6 +62,18 @@ function PodcastPage() {
     return <p>Podcast not found.</p>;
   }
 
+  const handleEditClick = () => {
+    scrollToTop();
+    navigate(`/edit-podcast/${podcastId}`);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="podcast-page">
       <div className="podcast-details">
@@ -88,7 +101,6 @@ function PodcastPage() {
                     ? episode.audio_file
                     : `${process.env.REACT_APP_MEDIA_URL}/storage/${episode.audio_file}`
                   : null;
-                console.log("Episode Audio URL:", audioUrl);
                 return (
                   <li key={episode.id} className="episode-item">
                     <h4>{episode.title}</h4>
@@ -110,6 +122,11 @@ function PodcastPage() {
           </ul>
         </div>
       </div>
+      {currentUser && currentUser.admin && (
+        <button onClick={handleEditClick} className="edit-button">
+          Edit Podcast or it's Episodes
+        </button>
+      )}
     </div>
   );
 }

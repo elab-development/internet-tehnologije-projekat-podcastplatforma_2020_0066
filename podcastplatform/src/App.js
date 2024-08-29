@@ -13,6 +13,7 @@ import MyPage from "./pages/MyPage";
 import Login from "./pages/Login";
 import AddPod from "./pages/Add";
 import Podcastp from "./pages/Showpod";
+import EditPodcast from "./pages/EditPodcast.js";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/sign-up" exact element={<Login />} />
         <Route path="/addpod" exact element={<AddPod />} />
         <Route path="/podcast/:podcastId" exact element={<Podcastp />} />
+        <Route path="/edit-podcast/:podcastId" element={<EditPodcast />} />
       </Routes>
     </Router>
   );
