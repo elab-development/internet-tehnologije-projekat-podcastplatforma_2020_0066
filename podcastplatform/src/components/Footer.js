@@ -1,4 +1,4 @@
-/*import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import "./Footer.css";
@@ -6,129 +6,7 @@ import axios from "./services/axios";
 import { useAuth } from "./AuthContext";
 
 function Footer() {
-  //const [isAuthenticated, setIsAuthenticated] = useState(
-  //  !!localStorage.getItem("token")
-  //);
-  const { isAuthenticated, setIsAuthenticated } = useContext(useAuth);
-
-  const handleButtonClick = async () => {
-    if (isAuthenticated) {
-      try {
-        console.log("Token:", localStorage.getItem("token"));
-        await axios.post("/logout");
-        console.log("Logout response:");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setIsAuthenticated(false);
-      } catch (error) {
-        console.error("Error logging out:", error);
-      }
-    }
-  };
-
-  return (
-    <div className="footer-container">
-      <section className="footer-subscription">
-        <p className="footer-subscription-heading">
-          Make your own account to receive notifications from our best podcasts
-        </p>
-        <div className="input-areas">
-          <Button
-            buttonStyle="btn--outline"
-            onClick={handleButtonClick}
-            to="/sign-up"
-          >
-            {isAuthenticated ? "Log out" : "Sign up"}
-          </Button>
-        </div>
-      </section>
-
-      <div className="footer-links">
-        <div className="footer-link-wrapper">
-          <div className="footer-link-items">
-            <h2>About Us</h2>
-            <p className="footer-subscription-p">
-              Discover and share your favorite podcasts effortlessly with our
-              innovative platform, perfect for listeners and creators alike.
-              Enjoy seamless integration and features that enhance both your
-              listening experience and content creation.
-            </p>
-          </div>
-        </div>
-        <div className="footer-link-wrapper">
-          <div className="footer-link-items">
-            <h2>Contact Us</h2>
-            <p className="footer-subscription-p">email: pp@gmail.com</p>
-            <p className="footer-subscription-p">phone: 069 123 123</p>
-          </div>
-        </div>
-      </div>
-
-      <section className="social-media">
-        <div className="social-media-wrap">
-          <div className="footer-logo">
-            <Link to="/" className="social-logo">
-              PODCAST PLATFORM
-              <i className="fab fa-typo3" />
-            </Link>
-          </div>
-          <div className="social-icons">
-            <Link
-              className="social-icon-link facebook"
-              to="/"
-              target="_blank"
-              aria-label="Facebook"
-            >
-              <i className="fab fa-facebook-f" />
-            </Link>
-            <Link
-              className="social-icon-link instagram"
-              to="/"
-              target="_blank"
-              aria-label="Instagram"
-            >
-              <i className="fab fa-instagram" />
-            </Link>
-            <Link
-              className="social-icon-link youtube"
-              to="/"
-              target="_blank"
-              aria-label="Youtube"
-            >
-              <i className="fab fa-youtube" />
-            </Link>
-            <Link
-              className="social-icon-link twitter"
-              to="/"
-              target="_blank"
-              aria-label="Twitter"
-            >
-              <i className="fab fa-twitter" />
-            </Link>
-            <Link
-              className="social-icon-link twitter"
-              to="/"
-              target="_blank"
-              aria-label="LinkedIn"
-            >
-              <i className="fab fa-linkedin" />
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-export default Footer;*/
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "./Button";
-import "./Footer.css";
-import axios from "./services/axios";
-
-function Footer(/*{ isAuthenticated, setIsAuthenticated }*/) {
-  const [isAuthenticated, setIsAuthenticated] = useState(
+  /* const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token")
   );
 
@@ -145,8 +23,10 @@ function Footer(/*{ isAuthenticated, setIsAuthenticated }*/) {
         console.error("Error logging out:", error);
       }
     }
-  };
+  };*/
 
+  const { isAuthenticated, logout } = useAuth();
+  //{handleButtonClick}
   return (
     <div className="footer-container">
       <section className="footer-subscription">
@@ -156,7 +36,7 @@ function Footer(/*{ isAuthenticated, setIsAuthenticated }*/) {
         <div className="input-areas">
           <Button
             buttonStyle="btn--outline"
-            onClick={handleButtonClick}
+            onClick={isAuthenticated ? logout : undefined}
             to="/sign-up"
           >
             {isAuthenticated ? "Log out" : "Sign up"}
