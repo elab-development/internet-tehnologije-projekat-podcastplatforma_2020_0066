@@ -38,3 +38,5 @@ Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::get('/search-podcasts', [PodcastController::class, 'search']);
+Route::get('/podcasts/filter/{user_id}', [PodcastController::class, 'filterByUser']);
+Route::get('/admins', [PodcastController::class, 'getAdmins']);

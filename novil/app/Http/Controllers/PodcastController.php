@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Podcast;
 use App\Models\Favorite;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class PodcastController extends Controller
@@ -14,8 +15,7 @@ class PodcastController extends Controller
      */
     public function index()
     {
-        //return response()->json(Podcast::with('user')->get());
-    
+            
         $podcasts = Podcast::with('user')->get();
 
         foreach ($podcasts as $podcast) {
@@ -70,12 +70,8 @@ class PodcastController extends Controller
     public function show(string $id)
     {
         
-        //$podcast = Podcast::with('episodes')->findOrFail($id);
-        //return response()->json($podcast);
-
         $podcast = Podcast::with('episodes')->findOrFail($id);
 
-        // Generate full URL for the image
         if ($podcast->image) {
             $podcast->image = \Storage::disk('public')->url($podcast->image);
         }
@@ -208,6 +204,34 @@ public function search(Request $request)
         ->get();
 
     return response()->json($podcasts);
+}
+
+public function filterByUser($user_id, Request $request)
+{
+
+   $query = Podcast::query();
+   $query->where('user_id', $user_id);
+
+   $perPage = 4;
+   $page = $request->input('page', 1);
+
+   $podcasts = $query->paginate($perPage, ['*'], 'page', $page);
+
+
+   foreach ($podcasts as $podcast) {
+       if ($podcast->image) {
+           $podcast->image = \Storage::disk('public')->url($podcast->image);
+       }
+   }
+
+   return response()->json($podcasts);
+}
+
+public function getAdmins()
+{
+    $admins = User::where('admin', true)->get();
+
+    return response()->json($admins);
 }
 
 }
