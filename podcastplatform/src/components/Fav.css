@@ -10,27 +10,30 @@
   
   .pod__container {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     align-items: center;
     max-width: 1120px;
     width: 90%;
     margin: 0 auto;
   }
   
-  /*.pod__wrapper {
-    position: relative;
-    margin: 50px 0 45px;
-  }
-  */
+
   .pod__items {
     margin-bottom: 24px;
+
   }
   
   .pod__item {
-    display: flex;
+    /*display: flex;
     flex: 1;
     margin: 0 1rem;
+    border-radius: 10px;*/
+    display: flex;
+    max-width: 450px;
+    min-width: 250px;
     border-radius: 10px;
+    margin: 0 1rem;
+    margin-bottom: 1rem; 
   }
   
   .pod__item__link {
@@ -137,6 +140,37 @@
     font-size: 18px;
     line-height: 24px;
   }
+
+
+
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .pagination button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .pagination button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination span {
+    font-size: 16px;
+  }
+  
 
   
   

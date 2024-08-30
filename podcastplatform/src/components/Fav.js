@@ -11,6 +11,10 @@ function Podcasts() {
   const [favorites, setFavorites] = useState([]);
   const [allPodcasts, setAllPodcasts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [favoritesPage, setFavoritesPage] = useState(1);
+  const [podcastsPage, setPodcastsPage] = useState(1);
+  const [favoritesTotalPages, setFavoritesTotalPages] = useState(1);
+  const [podcastsTotalPages, setPodcastsTotalPages] = useState(1);
 
   useEffect(() => {
     const loadUserDataAndPodcasts = async () => {
@@ -22,26 +26,41 @@ function Podcasts() {
         setCurrentUser(user);
 
         try {
-          const favoritesResponse = await axios.get("/user/favorites", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const favoritesResponse = await axios.get(
+            `/user/favorites?page=${favoritesPage}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           console.log("Favorites response:", favoritesResponse.data);
-          setFavorites(favoritesResponse.data);
+
+          const favoritesData = Array.isArray(favoritesResponse.data.data)
+            ? favoritesResponse.data.data
+            : [];
+
+          setFavorites(favoritesData);
+          setFavoritesTotalPages(favoritesResponse.data.last_page);
 
           if (user.admin) {
-            const allPodcastsResponse = await axios.get("/podcasts", {
-              headers: { Authorization: `Bearer ${token}` },
-            });
+            const allPodcastsResponse = await axios.get(
+              `/podcasts/filter/${user.id}?page=${podcastsPage}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
             console.log("All podcasts response:", allPodcastsResponse.data);
 
-            const podcastsData = allPodcastsResponse.data.map((podcast) => ({
+            const podcastsArray = Array.isArray(allPodcastsResponse.data.data)
+              ? allPodcastsResponse.data.data
+              : [];
+
+            const podcastsData = podcastsArray.map((podcast) => ({
               ...podcast,
-              isFavorited: favoritesResponse.data.some(
-                (fav) => fav.id === podcast.id
-              ),
+              isFavorited: favoritesData.some((fav) => fav.id === podcast.id),
             }));
 
             setAllPodcasts(podcastsData);
+            setPodcastsTotalPages(allPodcastsResponse.data.last_page || 1);
           }
         } catch (error) {
           console.error("Failed to fetch data", error);
@@ -58,7 +77,7 @@ function Podcasts() {
     };
 
     loadUserDataAndPodcasts();
-  }, []);
+  }, [favoritesPage, podcastsPage]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -92,6 +111,28 @@ function Podcasts() {
         ) : (
           <p>No favorite podcasts yet.</p>
         )}
+
+        <div className="pagination">
+          <button
+            onClick={() => setFavoritesPage((prev) => Math.max(prev - 1, 1))}
+            disabled={favoritesPage === 1}
+          >
+            Previous
+          </button>
+          <span>
+            Page {favoritesPage} of {favoritesTotalPages}
+          </span>
+          <button
+            onClick={() =>
+              setFavoritesPage((prev) =>
+                Math.min(prev + 1, favoritesTotalPages)
+              )
+            }
+            disabled={favoritesPage === favoritesTotalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {currentUser?.admin && (
@@ -122,6 +163,28 @@ function Podcasts() {
             ) : (
               <p>No podcasts available.</p>
             )}
+            <div className="pagination">
+              <button
+                onClick={() => setPodcastsPage((prev) => Math.max(prev - 1, 1))}
+                disabled={podcastsPage === 1}
+              >
+                Previous
+              </button>
+              <span>
+                Page {podcastsPage} of {podcastsTotalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setPodcastsPage((prev) =>
+                    Math.min(prev + 1, podcastsTotalPages)
+                  )
+                }
+                disabled={podcastsPage === podcastsTotalPages}
+              >
+                Next
+              </button>
+            </div>
+
             <div className="hero-btns">
               <Button
                 className="btns"

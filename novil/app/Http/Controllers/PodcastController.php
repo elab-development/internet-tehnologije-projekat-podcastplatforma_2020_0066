@@ -15,7 +15,6 @@ class PodcastController extends Controller
      */
     public function index()
     {
-            
         $podcasts = Podcast::with('user')->get();
 
         foreach ($podcasts as $podcast) {
@@ -75,7 +74,6 @@ class PodcastController extends Controller
      */
     public function show(string $id)
     {
-        
         $podcast = Podcast::with('episodes')->findOrFail($id);
 
         if ($podcast->image) {
@@ -190,10 +188,24 @@ public function unfavorite(int $id)
 
 public function favorites()
 {
+    
     $user = Auth::user();
+
+    $perPage = 4; 
+    $page = request()->input('page', 1); 
+
      $favorites = Podcast::whereHas('favorites', function($query) use ($user) {
         $query->where('user_id', $user->id);
-    })->get();
+    })->paginate($perPage, ['*'], 'page', $page);
+
+//
+    $favorites->getCollection()->transform(function ($podcast) {
+        if ($podcast->image) {
+            $podcast->image = \Storage::disk('public')->url($podcast->image);
+        }
+        return $podcast;
+    });
+
 
     return response()->json($favorites);
 }

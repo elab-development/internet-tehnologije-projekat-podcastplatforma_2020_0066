@@ -17,8 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-//Route::apiResource('podcasts', PodcastController::class);
-
 Route::get('/podcasts/all', [PodcastController::class, 'getall']);
 
 Route::get('/podcasts', [PodcastController::class, 'index']); 
