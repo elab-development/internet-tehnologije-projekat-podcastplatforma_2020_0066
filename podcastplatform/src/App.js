@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import AddPod from "./pages/Add";
 import Podcastp from "./pages/Showpod";
 import EditPodcast from "./pages/EditPodcast.js";
+import { AuthProvider, useAuth } from "./components/AuthContext";
 
 function App() {
   /*const [isAuthenticated, setIsAuthenticated] = useState(
@@ -37,11 +38,9 @@ function App() {
   }, []);*/
 
   return (
+    //<AuthProvider>
     <Router>
-      <Navbar
-      /*isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}*/
-      />
+      <Navbar />
       <Routes>
         <Route path="/" exact element={<Home />} />
         <Route path="/explore" exact element={<Explore />} />
@@ -49,7 +48,7 @@ function App() {
           path="/mypage"
           exact
           element={
-            <PrivateRoute /*isAuthenticated={isAuthenticated}*/>
+            <PrivateRoute>
               <MyPage />
             </PrivateRoute>
           }
@@ -59,18 +58,21 @@ function App() {
         <Route path="/podcast/:podcastId" exact element={<Podcastp />} />
         <Route path="/edit-podcast/:podcastId" element={<EditPodcast />} />
       </Routes>
-      <Footer
-      /* isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}*/
-      />
+      <Footer />
     </Router>
+    //</AuthProvider>
   );
 }
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/sign-up" />;
-  // return isAuthenticated ? children : <Navigate to="/sign-up" />; , isAuthenticated
+  /*const { isAuthenticated } = React.useContext(AuthContext);
+  return isAuthenticated ? children : <Navigate to="/sign-up" />;
+*/
+  /*const { user } = useAuth();
+  return user ? children : <Navigate to="/sign-up" />;
+*/
 };
 
 export default App;
