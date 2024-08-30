@@ -5,9 +5,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PodcastController;
 use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TranslationController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('podcasts', PodcastController::class)->except(['index', 'show']); 
 });
 
 
@@ -16,10 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/podcasts/all', [PodcastController::class, 'getall']);
 
 Route::get('/podcasts', [PodcastController::class, 'index']); 
-Route::post('/podcasts', [PodcastController::class, 'store'])->middleware('auth:sanctum'); 
+//Route::post('/podcasts', [PodcastController::class, 'store'])->middleware('auth:sanctum'); 
 Route::get('/podcasts/{id}', [PodcastController::class, 'show']);
-Route::put('/podcasts/{id}', [PodcastController::class, 'update'])->middleware('auth:sanctum'); 
-Route::delete('/podcasts/{id}', [PodcastController::class, 'destroy'])->middleware('auth:sanctum'); 
+//Route::put('/podcasts/{id}', [PodcastController::class, 'update'])->middleware('auth:sanctum'); 
+//Route::delete('/podcasts/{id}', [PodcastController::class, 'destroy'])->middleware('auth:sanctum'); 
 
 Route::get('/podcasts/{podcastId}/episodes', [EpisodeController::class, 'index']);
 Route::post('/podcasts/{podcastId}/episodes', [EpisodeController::class, 'store'])->middleware('auth:sanctum');

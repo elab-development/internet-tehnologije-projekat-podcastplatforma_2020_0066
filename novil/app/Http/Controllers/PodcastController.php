@@ -30,6 +30,12 @@ class PodcastController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+     public function create()
+     {
+         return response()->json(['message' => 'Form to create a new podcast.'], 200);
+     }
+
     public function store(Request $request)
     {
        //provera jel admin
@@ -82,6 +88,14 @@ class PodcastController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+     public function edit(string $id)
+     {
+         $podcast = Podcast::findOrFail($id);
+ 
+         return response()->json($podcast, 200);
+     }
+
     public function update(Request $request,string $id)
     {
         $podcast = Podcast::findOrFail($id);
