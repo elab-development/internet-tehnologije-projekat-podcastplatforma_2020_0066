@@ -7,7 +7,6 @@ export default function Explore() {
   return (
     <>
       <PodForm />
-      <Footer />
     </>
   );
 }

@@ -16,6 +16,7 @@ function Podcasts() {
     const loadUserDataAndPodcasts = async () => {
       const user = JSON.parse(localStorage.getItem("user"));
       const token = localStorage.getItem("token");
+      console.log("Token:", token);
 
       if (user && token) {
         setCurrentUser(user);
@@ -24,12 +25,14 @@ function Podcasts() {
           const favoritesResponse = await axios.get("/user/favorites", {
             headers: { Authorization: `Bearer ${token}` },
           });
+          console.log("Favorites response:", favoritesResponse.data);
           setFavorites(favoritesResponse.data);
 
           if (user.admin) {
             const allPodcastsResponse = await axios.get("/podcasts", {
               headers: { Authorization: `Bearer ${token}` },
             });
+            console.log("All podcasts response:", allPodcastsResponse.data);
 
             const podcastsData = allPodcastsResponse.data.map((podcast) => ({
               ...podcast,

@@ -7,7 +7,6 @@ function Login() {
   return (
     <div>
       <LoginSignup />
-      <Footer />
     </div>
   );
 }

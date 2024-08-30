@@ -4,10 +4,12 @@ import "./Navbar.css";
 import { Button } from "./Button.js";
 import axios from "./services/axios";
 
-function Navbar() {
+function Navbar(/*{ isAuthenticated, setIsAuthenticated }*/) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("token")
+  );
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => {
@@ -27,6 +29,9 @@ function Navbar() {
     showButton();
     window.addEventListener("resize", showButton);
 
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+
     return () => window.removeEventListener("resize", showButton);
   }, []);
 
@@ -40,12 +45,12 @@ function Navbar() {
         }
       );
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout failed", error);
     }
   };
-
-  const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <nav className="navbar">

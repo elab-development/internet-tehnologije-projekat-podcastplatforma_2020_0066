@@ -82,7 +82,7 @@ class PodcastController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,string $id)
     {
         $podcast = Podcast::findOrFail($id);
 
@@ -91,10 +91,10 @@ class PodcastController extends Controller
         }
 
         $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
+            'title' => 'sometimes|required|string',
             'description' => 'sometimes|required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
-            'category' => 'nullable|string|max:255',
+            'category' => 'nullable|string',
         ]);
 
         $imagePath = $podcast->image; 
@@ -105,13 +105,15 @@ class PodcastController extends Controller
             }
     
             $image = $request->file('image');
+            return response()->json([
+                'image' => $image
+            ], 500);
+    
             $imagePath = $image->store('images', 'public');
-            
+            $validated['image'] = $imagePath;
         }
 
-        $validated['image'] = $imagePath;
-
-      /*  return response()->json([
+     /* return response()->json([
             'image' => $imagePath
         ], 500);*/
 
