@@ -186,7 +186,14 @@ public function favorites()
 public function getall()
 {
     try {
-        $podcasts = Podcast::all();
+
+        $perPage = 4; 
+        $page = request()->input('page', 1); 
+
+        //$podcast = Podcast::all();
+        $podcasts = Podcast::paginate($perPage, ['*'], 'page', $page);
+
+        //$podcasts = Podcast::all();
         return response()->json($podcasts);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Failed to retrieve podcasts.'], 500);
@@ -198,12 +205,32 @@ public function search(Request $request)
     $query = $request->input('query');
     $sortBy = $request->input('sort_by', 'title');
     $sortOrder = $request->input('sort_order', 'asc'); 
+
+$userId = $request->input('user_id'); // Get user_id if provided
+
+    $podcasts = Podcast::query();
+
+    if ($userId) {
+        $podcasts->where('user_id', $userId);
+    }
+
+    $podcasts = $podcasts->where('title', 'like', "%{$query}%")
+                         ->orderBy($sortBy, $sortOrder)
+                         ->paginate(4); // Adjust perPage as needed
+
+    foreach ($podcasts as $podcast) {
+        if ($podcast->image) {
+            $podcast->image = \Storage::disk('public')->url($podcast->image);
+        }
+    }
+
+    return response()->json($podcasts);
     
-    $podcasts = Podcast::where('title', 'like', "%{$query}%")
+    /*$podcasts = Podcast::where('title', 'like', "%{$query}%")
         ->orderBy($sortBy, $sortOrder)
         ->get();
 
-    return response()->json($podcasts);
+    return response()->json($podcasts);*/
 }
 
 public function filterByUser($user_id, Request $request)

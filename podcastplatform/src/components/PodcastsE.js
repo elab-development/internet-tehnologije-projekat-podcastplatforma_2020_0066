@@ -41,12 +41,12 @@ function Podcasts() {
         }
 
         const podcastsResponse = await axios.get(
-          "http://127.0.0.1:8000/api/podcasts/all"
+          `http://127.0.0.1:8000/api/podcasts/all?page=${currentPage}` //promena
         );
         console.log("Podcasts Response:", podcastsResponse);
 
         if (podcastsResponse.data) {
-          const podcastsData = podcastsResponse.data.map((podcast) => ({
+          const podcastsData = podcastsResponse.data.data.map((podcast) => ({
             ...podcast,
             isFavorited: favorites.includes(podcast.id),
           }));
@@ -70,16 +70,25 @@ function Podcasts() {
     };
 
     fetchPodcasts();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const fetchFilteredPodcasts = async () => {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/search-podcasts?query=${searchQuery}&page=${currentPage}`
-        );
-        console.log("Filtered Podcasts Response:", response);
-        setFilteredPodcasts(response.data.data);
+        let searchUrl = `http://127.0.0.1:8000/api/search-podcasts?query=${searchQuery}&page=${currentPage}`;
+
+        if (selectedUser) {
+          searchUrl += `&user_id=${selectedUser}`;
+        }
+
+        const response = await axios.get(searchUrl);
+        console.log("Podcasts For Search Response:", response);
+        if (Array.isArray(response.data.data)) {
+          setFilteredPodcasts(response.data.data);
+        } else {
+          console.error("Filtered podcasts data is not an array.");
+          setFilteredPodcasts([]);
+        }
         setTotalPages(response.data.last_page);
       } catch (error) {
         console.error("Error fetching filtered podcasts:", error);
@@ -171,13 +180,19 @@ function Podcasts() {
             ))}
           </ul>
           <div className="pagination">
-            <button onClick={() => handlePageChange(currentPage - 1)}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
               Previous
             </button>
             <span>
               Page {currentPage} of {totalPages}
             </span>
-            <button onClick={() => handlePageChange(currentPage + 1)}>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
               Next
             </button>
           </div>
