@@ -12,10 +12,8 @@ function AddEpisode() {
   const [episodeDescription, setEpisodeDescription] = useState("");
   const [episodeFile, setEpisodeFile] = useState(null);
   const [selectedPodcast, setSelectedPodcast] = useState("");
-  const [selectedEpisode, setSelectedEpisode] = useState("");
   const [error, setError] = useState("");
   const [podcasts, setPodcasts] = useState([]);
-  const [episodes, setEpisodes] = useState([]);
 
   const podcastImageRef = useRef(null);
   const episodeFileRef = useRef(null);
@@ -42,8 +40,8 @@ function AddEpisode() {
   const handlePodcastChange = async (e) => {
     const podcastId = e.target.value;
     setSelectedPodcast(podcastId);
-    setEpisodes([]);
-
+    //setEpisodes([]);
+    /*
     if (podcastId) {
       try {
         const token = localStorage.getItem("token");
@@ -55,7 +53,7 @@ function AddEpisode() {
         console.error("Failed to fetch episodes", error);
         setError("Failed to fetch episodes.");
       }
-    }
+    }*/
   };
 
   const handleActionChange = (e) => {
@@ -150,7 +148,6 @@ function AddEpisode() {
     setEpisodeDescription("");
     setEpisodeFile(null);
     setSelectedPodcast("");
-    setSelectedEpisode("");
     setPodcastCategory("");
     if (podcastImageRef.current) {
       podcastImageRef.current.value = "";

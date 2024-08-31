@@ -46,7 +46,7 @@ function Podcasts() {
 
         if (Array.isArray(podcastsResponse.data)) {
           const podcastsData = podcastsResponse.data
-            .slice(4, 8)
+            .slice(0, 4)
             .map((podcast) => ({
               ...podcast,
               isFavorited: favorites.includes(podcast.id),

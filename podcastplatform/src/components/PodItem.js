@@ -10,6 +10,7 @@ function PodItem({
   podcastId,
   isFavorited,
   currentUser,
+  onFavoriteStatusChange,
 }) {
   const navigate = useNavigate();
 
@@ -41,6 +42,7 @@ function PodItem({
             isFavorited={isFavorited}
             currentUser={currentUser}
             className="favorite-button"
+            onFavoriteStatusChange={onFavoriteStatusChange}
           />
         </Link>
       </li>

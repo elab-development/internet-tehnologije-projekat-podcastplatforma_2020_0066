@@ -11,7 +11,7 @@ function EditPodcastForm() {
   const [updatedPodcast, setUpdatedPodcast] = useState({
     title: "",
     description: "",
-    image: null,
+    //image: null,
     category: "",
   });
 
@@ -19,7 +19,7 @@ function EditPodcastForm() {
   const [updatedEpisode, setUpdatedEpisode] = useState({
     title: "",
     description: "",
-    audio_file: null,
+    //audio_file: null,
   });
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ function EditPodcastForm() {
         setUpdatedPodcast({
           title: podcastResponse.data.title,
           description: podcastResponse.data.description,
-          image: podcastResponse.data.image,
+          //image: podcastResponse.data.image,
           category: podcastResponse.data.category,
         });
 
@@ -69,8 +69,9 @@ function EditPodcastForm() {
     const formData = new FormData();
     formData.append("title", updatedPodcast.title);
     formData.append("description", updatedPodcast.description);
-    if (updatedPodcast.image) formData.append("image", updatedPodcast.image);
+    // if (updatedPodcast.image) formData.append("image", updatedPodcast.image);
     formData.append("category", updatedPodcast.category);
+    //formData.append("_method", "PUT");
 
     try {
       const token = localStorage.getItem("token");
@@ -80,7 +81,7 @@ function EditPodcastForm() {
       }
 
       await axios.put(`/podcasts/${podcastId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "application/json" }, // "multipart/form-data"
         Authorization: `Bearer ${token}`,
       });
       alert("Podcast updated successfully!");
@@ -100,8 +101,9 @@ function EditPodcastForm() {
     const formData = new FormData();
     formData.append("title", updatedEpisode.title);
     formData.append("description", updatedEpisode.description);
-    if (updatedEpisode.audio_file)
-      formData.append("audio_file", updatedEpisode.audio_file);
+    // if (updatedEpisode.audio_file)
+    //  formData.append("audio_file", updatedEpisode.audio_file);
+    //formData.append("_method", "PUT");
 
     try {
       const token = localStorage.getItem("token");
@@ -114,7 +116,7 @@ function EditPodcastForm() {
         `/podcasts/${podcastId}/episodes/${selectedEpisode}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { "Content-Type": "application/json" }, //"application/json""multipart/form-data"
           Authorization: `Bearer ${token}`,
         }
       );
@@ -136,7 +138,7 @@ function EditPodcastForm() {
         setUpdatedEpisode({
           title: episodeResponse.data.title,
           description: episodeResponse.data.description,
-          audio_file: null,
+          //audio_file: null,
         });
       } catch (error) {
         console.error("Failed to fetch episode", error);
@@ -146,7 +148,7 @@ function EditPodcastForm() {
       setUpdatedEpisode({
         title: "",
         description: "",
-        audio_file: null,
+        // audio_file: null,
       });
     }
   };
@@ -224,13 +226,13 @@ function EditPodcastForm() {
             onChange={handlePodcastChange}
             required
           />
-          <label>Podcast Image</label>
+          {/* <label>Podcast Image</label>
           <input
             type="file"
             name="image"
             accept="image/*"
             onChange={handlePodcastChange}
-          />
+          />*/}
           <button type="submit">Update Podcast</button>
           <button type="button" onClick={handleDeletePodcast}>
             Delete Podcast
@@ -264,13 +266,13 @@ function EditPodcastForm() {
             onChange={handleEpisodeChange}
             required
           ></textarea>
-          <label>Audio File</label>
+          {/*<label>Audio File</label>
           <input
             type="file"
             name="audio_file"
             accept="audio/*"
             onChange={handleEpisodeChange}
-          />
+          />*/}
           <button type="submit">Update Episode</button>
           <button type="button" onClick={handleDeleteEpisode}>
             Delete Episode

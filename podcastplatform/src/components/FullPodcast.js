@@ -66,7 +66,7 @@ function PodcastPage() {
     scrollToTop();
     navigate(`/edit-podcast/${podcastId}`);
   };
-
+  /*
   const tweetpod = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -94,7 +94,7 @@ function PodcastPage() {
       alert("An error occurred while trying to share the podcast.");
     }
   };
-
+*/
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -150,9 +150,7 @@ function PodcastPage() {
           </ul>
         </div>
       </div>
-      <button onClick={tweetpod} className="edit-button">
-        Share this podcast on Twitter
-      </button>
+
       {currentUser && currentUser.admin && (
         <button onClick={handleEditClick} className="edit-button">
           Edit Podcast or it's Episodes
@@ -162,6 +160,11 @@ function PodcastPage() {
   );
 }
 
+/*
+  <button onClick={tweetpod} className="edit-button">
+        Share this podcast on Twitter
+      </button>
+      */
 function AudioPlayer({ audioUrl, currentUser }) {
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);

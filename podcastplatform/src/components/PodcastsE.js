@@ -13,7 +13,7 @@ function Podcasts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [friend, setFriend] = React.useState(null);
-
+  /*
   useEffect(() => {
     const fetchPodcasts = async () => {
       try {
@@ -74,6 +74,67 @@ function Podcasts() {
       .get("https://randomuser.me/api/")
       .then((response) => {
         console.log(response);
+        let podaci = response.data.results[0];
+        setFriend({
+          ime: podaci.name.first + " " + podaci.name.last,
+          slika: podaci.picture.large,
+          tekst: "Najboli sajt za slusanje podkasta!",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    fetchPodcasts();
+  }, [currentPage]);*/
+
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        let favorites = [];
+
+        if (token) {
+          try {
+            const favoritesResponse = await axios.get("/user/favorites", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            const favoritesData = favoritesResponse.data ?? [];
+            if (Array.isArray(favoritesData)) {
+              favorites = favoritesData.map((podcast) => podcast.id);
+            }
+          } catch (error) {
+            console.error("Error fetching favorites:", error);
+          }
+        }
+
+        const podcastsResponse = await axios.get(
+          `http://127.0.0.1:8000/api/podcasts/all?page=${currentPage}`
+        );
+
+        if (podcastsResponse.data) {
+          const podcastsData = podcastsResponse.data.data.map((podcast) => ({
+            ...podcast,
+            isFavorited: favorites.includes(podcast.id),
+          }));
+
+          setPodcasts(podcastsData);
+          setFilteredPodcasts(podcastsData);
+          setTotalPages(podcastsResponse.data.last_page);
+        }
+
+        const usersResponse = await axios.get(
+          "http://127.0.0.1:8000/api/admins"
+        );
+        setUsers(usersResponse.data);
+      } catch (error) {
+        console.error("Error fetching podcasts:", error);
+      }
+    };
+
+    axios
+      .get("https://randomuser.me/api/")
+      .then((response) => {
         let podaci = response.data.results[0];
         setFriend({
           ime: podaci.name.first + " " + podaci.name.last,
@@ -155,6 +216,16 @@ function Podcasts() {
     }
   };
 
+  const handleFavoriteStatusChange = (updatedPodcast) => {
+    setPodcasts((prevPodcasts) =>
+      prevPodcasts.map((podcast) =>
+        podcast.id === updatedPodcast.id
+          ? { ...podcast, isFavorited: updatedPodcast.isFavorited }
+          : podcast
+      )
+    );
+  };
+
   return (
     <div className="pod">
       <h1>A wide variety of podcasts!</h1>
@@ -192,6 +263,7 @@ function Podcasts() {
                 label={podcast.category || "Category"}
                 path={`/podcast/${podcast.id}`}
                 isFavorited={podcast.isFavorited}
+                onFavoriteStatusChange={handleFavoriteStatusChange}
               />
             ))}
           </ul>

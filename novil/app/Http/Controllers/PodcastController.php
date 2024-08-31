@@ -96,6 +96,8 @@ class PodcastController extends Controller
 
     public function update(Request $request,string $id)
     {
+        \Log::info('Request Data:', $request->all());
+        \Log::info('Request Files:', $request->file());
         $podcast = Podcast::findOrFail($id);
 
         if (Auth::id() !== $podcast->user_id && !Auth::user()->admin) {
@@ -117,12 +119,14 @@ class PodcastController extends Controller
             }
     
             $image = $request->file('image');
-            return response()->json([
+           /* return response()->json([
                 'image' => $image
-            ], 500);
+            ], 500);*/
     
             $imagePath = $image->store('images', 'public');
             $validated['image'] = $imagePath;
+        }else {
+            $validated['image'] = $podcast->image;
         }
 
      /* return response()->json([

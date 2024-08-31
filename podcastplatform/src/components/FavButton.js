@@ -9,12 +9,13 @@ function FavoriteButton({ podcastId, isFavorited, currentUser }) {
   }, [isFavorited]);
 
   const handleFavorite = async () => {
-    if (!currentUser) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
       alert("You must be logged in to favorite a podcast.");
       return;
     }
 
-    const token = localStorage.getItem("token");
     if (token) {
       try {
         if (favorited) {
@@ -31,6 +32,10 @@ function FavoriteButton({ podcastId, isFavorited, currentUser }) {
           );
         }
         setFavorited(!favorited);
+        alert(
+          `Successfully ${favorited ? "removed from" : "added to"} favorites`
+        );
+        //alert("Successfully added to favorites");
       } catch (error) {
         console.error("Failed to update favorite status", error);
       }
