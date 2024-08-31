@@ -67,6 +67,34 @@ function PodcastPage() {
     navigate(`/edit-podcast/${podcastId}`);
   };
 
+  const tweetpod = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "/share-podcast",
+        {
+          title: podcast.title,
+          //url: `${window.location.origin}/podcasts/${podcastId}`,
+          url: `REACT_APP_API_URL/podcasts/${podcastId}`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        alert("Tweet posted successfully!");
+      } else {
+        alert("Could not post tweet. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error posting tweet:", error);
+      alert("An error occurred while trying to share the podcast.");
+    }
+  };
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -122,6 +150,9 @@ function PodcastPage() {
           </ul>
         </div>
       </div>
+      <button onClick={tweetpod} className="edit-button">
+        Share this podcast on Twitter
+      </button>
       {currentUser && currentUser.admin && (
         <button onClick={handleEditClick} className="edit-button">
           Edit Podcast or it's Episodes

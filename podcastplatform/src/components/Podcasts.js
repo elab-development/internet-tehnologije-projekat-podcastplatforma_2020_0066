@@ -13,24 +13,38 @@ function Podcasts() {
     const fetchUserDataAndPodcasts = async () => {
       try {
         const token = localStorage.getItem("token");
-        //let favorites = [];
+        let favorites = [];
 
         if (token) {
-          const userResponse = await axios.get("/user", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          try {
+            const userResponse = await axios.get("/user", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
 
-          setCurrentUser(userResponse.data);
+            setCurrentUser(userResponse.data);
 
-          const favoritesResponse = await axios.get("/user/favorites", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const favorites = favoritesResponse.data.map((podcast) => podcast.id);
+            const favoritesResponse = await axios.get("/user/favorites", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
 
-          const podcastsResponse = await axios.get(
-            "http://127.0.0.1:8000/api/podcasts"
-          );
+            if (Array.isArray(favoritesResponse.data)) {
+              favorites = favoritesResponse.data.map((podcast) => podcast.id);
+            } else {
+              console.error(
+                "Favorites response is not an array:",
+                favoritesResponse.data
+              );
+            }
+          } catch (error) {
+            console.error("Error fetching user or favorites:", error);
+          }
+        }
 
+        const podcastsResponse = await axios.get(
+          "http://127.0.0.1:8000/api/podcasts"
+        );
+
+        if (Array.isArray(podcastsResponse.data)) {
           const podcastsData = podcastsResponse.data
             .slice(4, 8)
             .map((podcast) => ({
@@ -40,10 +54,10 @@ function Podcasts() {
 
           setPodcasts(podcastsData);
         } else {
-          const response = await axios.get(
-            "http://127.0.0.1:8000/api/podcasts"
+          console.error(
+            "Podcasts response is not an array:",
+            podcastsResponse.data
           );
-          setPodcasts(response.data.slice(4, 8));
         }
       } catch (error) {
         console.error("Error fetching data:", error);

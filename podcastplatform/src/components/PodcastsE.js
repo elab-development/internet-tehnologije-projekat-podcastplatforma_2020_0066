@@ -12,6 +12,7 @@ function Podcasts() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [friend, setFriend] = React.useState(null);
 
   useEffect(() => {
     const fetchPodcasts = async () => {
@@ -68,6 +69,21 @@ function Podcasts() {
         console.error("Error fetching podcasts:", error);
       }
     };
+
+    axios
+      .get("https://randomuser.me/api/")
+      .then((response) => {
+        console.log(response);
+        let podaci = response.data.results[0];
+        setFriend({
+          ime: podaci.name.first + " " + podaci.name.last,
+          slika: podaci.picture.large,
+          tekst: "Najboli sajt za slusanje podkasta!",
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     fetchPodcasts();
   }, [currentPage]);
@@ -197,6 +213,19 @@ function Podcasts() {
             </button>
           </div>
         </div>
+      </div>
+      <div className="pod__container">
+        {friend && (
+          <div className="friend-card">
+            <h1>{friend.ime}</h1>
+            <img
+              src={friend.slika}
+              alt={friend.ime}
+              className="img-thumbnail"
+            />
+            <p>{friend.tekst}</p>
+          </div>
+        )}
       </div>
     </div>
   );

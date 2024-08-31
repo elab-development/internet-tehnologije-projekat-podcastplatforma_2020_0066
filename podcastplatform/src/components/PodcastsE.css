@@ -161,6 +161,15 @@ h1 {
   font-size: 16px;
 }
 
+.friend-card {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.img-thumbnail {
+  border-radius: 8px;
+  max-width: 100%;
+}
 
 @media only screen and (min-width: 1200px) {
   .content__blog__container {
