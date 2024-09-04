@@ -30,14 +30,8 @@ class PodcastController extends Controller
      * Store a newly created resource in storage.
      */
 
-     public function create()
-     {
-         return response()->json(['message' => 'Form to create a new podcast.'], 200);
-     }
-
     public function store(Request $request)
     {
-       //provera jel admin
         if (!Auth::user()->admin) {
             return response()->json(['error' => 'Unauthorized. Only admins can create podcasts.'], 403);
         }
@@ -60,7 +54,6 @@ class PodcastController extends Controller
         $podcast = Podcast::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            //'user_id' => $validated['user_id'],
             'user_id' => Auth::id(), 
             'image' => $imagePath,
             'category' => $validated['category'],
@@ -87,13 +80,6 @@ class PodcastController extends Controller
      * Update the specified resource in storage.
      */
 
-     public function edit(string $id)
-     {
-         $podcast = Podcast::findOrFail($id);
- 
-         return response()->json($podcast, 200);
-     }
-
     public function update(Request $request,string $id)
     {
         \Log::info('Request Data:', $request->all());
@@ -119,9 +105,6 @@ class PodcastController extends Controller
             }
     
             $image = $request->file('image');
-           /* return response()->json([
-                'image' => $image
-            ], 500);*/
     
             $imagePath = $image->store('images', 'public');
             $validated['image'] = $imagePath;
@@ -129,11 +112,6 @@ class PodcastController extends Controller
             $validated['image'] = $podcast->image;
         }
 
-     /* return response()->json([
-            'image' => $imagePath
-        ], 500);*/
-
-    
         $podcast->update($validated);
         return response()->json($podcast);
     }
@@ -202,7 +180,7 @@ public function favorites()
         $query->where('user_id', $user->id);
     })->paginate($perPage, ['*'], 'page', $page);
 
-//
+
     $favorites->getCollection()->transform(function ($podcast) {
         if ($podcast->image) {
             $podcast->image = \Storage::disk('public')->url($podcast->image);
@@ -222,10 +200,8 @@ public function getall()
         $perPage = 4; 
         $page = request()->input('page', 1); 
 
-        //$podcast = Podcast::all();
         $podcasts = Podcast::paginate($perPage, ['*'], 'page', $page);
 
-        //$podcasts = Podcast::all();
         return response()->json($podcasts);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Failed to retrieve podcasts.'], 500);
@@ -238,7 +214,7 @@ public function search(Request $request)
     $sortBy = $request->input('sort_by', 'title');
     $sortOrder = $request->input('sort_order', 'asc'); 
 
-$userId = $request->input('user_id'); // Get user_id if provided
+    $userId = $request->input('user_id');
 
     $podcasts = Podcast::query();
 
@@ -248,7 +224,7 @@ $userId = $request->input('user_id'); // Get user_id if provided
 
     $podcasts = $podcasts->where('title', 'like', "%{$query}%")
                          ->orderBy($sortBy, $sortOrder)
-                         ->paginate(4); // Adjust perPage as needed
+                         ->paginate(4);
 
     foreach ($podcasts as $podcast) {
         if ($podcast->image) {
@@ -257,12 +233,7 @@ $userId = $request->input('user_id'); // Get user_id if provided
     }
 
     return response()->json($podcasts);
-    
-    /*$podcasts = Podcast::where('title', 'like', "%{$query}%")
-        ->orderBy($sortBy, $sortOrder)
-        ->get();
 
-    return response()->json($podcasts);*/
 }
 
 public function filterByUser($user_id, Request $request)

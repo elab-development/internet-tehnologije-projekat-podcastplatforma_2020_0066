@@ -7,6 +7,8 @@ use App\Models\Episode;
 use App\Models\Podcast;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use FFMpeg\FFMpeg; 
+use FFMpeg\Format\Audio\Mp3;
 
 class EpisodeController extends Controller
 {
@@ -15,12 +17,9 @@ class EpisodeController extends Controller
      */
     public function index(string $podcastId)
     {
-        //$episodes = Episode::where('podcast_id', $podcastId)->get();
-        //return response()->json($episodes);
-
+       
         $episodes = Episode::where('podcast_id', $podcastId)->get();
 
-        // Generate full URLs for audio files
         foreach ($episodes as $episode) {
             if ($episode->audio_file) {
                 $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
@@ -49,14 +48,26 @@ class EpisodeController extends Controller
         }
         
         $audioFile = $request->file('audio_file');
-        $filePath = $audioFile->store('audio_files', 'public');
-      //  $audioUrl = Storage::url($filePath);
+
+        $fileSize = $audioFile->getSize();
+        $maxSize = 5 * 1024 * 1024;
+
+        if ($fileSize > $maxSize) {
+            $filePath = $this->compressAudio($audioFile);
+            $message = 'Audio file was too large and has been compressed.';
+        } else {
+            $filePath = $audioFile->store('audio_files', 'public');
+            $message = 'Audio file was saved without compression.';
+        }
 
         $validated['podcast_id'] = $podcastId;
         $validated['audio_file'] =  $filePath ;
 
         $episode = Episode::create($validated);
-        return response()->json($episode, 201);
+        return response()->json([
+            'episode' => $episode,
+            'message' => $message
+        ], 201);
     }
 
     /**
@@ -64,13 +75,9 @@ class EpisodeController extends Controller
      */
     public function show(string $podcastId, string $id)
     {
-       // $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
-       // $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
-       // return response()->json($episode);
 
        $episode = Episode::where('podcast_id', $podcastId)->findOrFail($id);
 
-       // Generate full URL for the audio file
        if ($episode->audio_file) {
            $episode->audio_file = Storage::disk('public')->url($episode->audio_file);
        }
@@ -132,4 +139,25 @@ class EpisodeController extends Controller
         $episode->delete();
         return response()->json(null, 204);
     }
+
+
+////////////////////////////////////AUDIO
+
+protected function compressAudio($audioFile)
+{
+    $filePath = $audioFile->store('audio_files', 'public');
+    $compressedFilePath = 'compressed_' . basename($filePath);
+
+    $ffmpeg = FFMpeg::create();
+    $format = new Mp3();
+    $format->setAudioKiloBitrate(128);
+
+    $ffmpeg->open(storage_path('app/public/' . $filePath))
+           ->save($format, storage_path('app/public/' . $compressedFilePath));
+
+    Storage::disk('public')->delete($filePath);
+
+    return 'audio_files/' . $compressedFilePath;
+}
+
 }

@@ -43,6 +43,10 @@ Route::get('/search-podcasts', [PodcastController::class, 'search']);
 Route::get('/podcasts/filter/{user_id}', [PodcastController::class, 'filterByUser']);
 Route::get('/admins', [PodcastController::class, 'getAdmins']);
 
+/*Route::post('/audio/compress', [AudioProcessingController::class, 'compress']);
+Route::post('/audio/detect-noise', [AudioProcessingController::class, 'detectNoise']);
+Route::post('/audio/recognize-language', [AudioProcessingController::class, 'recognizeLanguage']);
+*/
 //Route::post('/share-podcast', [TwitterController::class, 'sharePodcastOnTwitter']);
 //Route::post('/podcasts', [PodcastController::class, 'store'])->middleware('auth:sanctum'); 
 //Route::put('/podcasts/{id}', [PodcastController::class, 'update'])->middleware('auth:sanctum'); 
